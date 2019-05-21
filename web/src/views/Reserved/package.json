@@ -1,0 +1,6 @@
+{
+    "name": "ReservedList",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./ReservedList.js"
+  }

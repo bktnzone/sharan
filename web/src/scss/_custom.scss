@@ -1,0 +1,18 @@
+// Here you can add other styles
+
+$sidebar-bg: #fff;
+$body-bg: rgba(0, 128, 0, 0.1);
+
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+// Required
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+.table th, .table td {
+  padding: 0.25rem;
+  vertical-align: top;
+  border-top: 1px solid #c8ced3;
+}

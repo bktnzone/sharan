@@ -1,24 +1,49 @@
+import React, { Component } from "react";
+import queryString from "query-string";
+import { Link } from "react-router-dom";
+import {
+  Form,
+  FormGroup,
+  Input,
+  Button,
+  Label,
+  FormText,
+  CardFooter,
+  Badge,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Table
+} from "reactstrap";
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
-import React, { Component } from 'react';
-import queryString from 'query-string'
-import { Link } from 'react-router-dom';
-import {Form,FormGroup,Input,Button,Label,FormText,CardFooter, Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import Select from "react-select";
-import {apiServices as apiSvc} from "../../api/service";
-import { AppSwitch } from '@coreui/react'
+import { apiServices as apiSvc } from "../../api/service";
+import { AppSwitch } from "@coreui/react";
 
-const columns = [{
-  dataField: 'id',
-  text: 'Product ID'
-}, {
-  dataField: 'name',
-  text: 'Product Name'
-}, {
-  dataField: 'price',
-  text: 'Product Price'
-}];
+const columns = [
+  {
+    dataField: "id",
+    text: "Product ID"
+  },
+  {
+    dataField: "name",
+    text: "Product Name"
+  },
+  {
+    dataField: "price",
+    text: "Product Price"
+  }
+];
 
+const studentTypes = [
+  { value: 1, label: "Kumar" },
+  { value: 2, label: "O.Kumar" },
+  { value: 3, label: "Kanya" },
+  { value: 4, label: "Matha" }
+];
 
 const pageButtonRenderer = ({
   page,
@@ -27,14 +52,16 @@ const pageButtonRenderer = ({
   title,
   onPageChange
 }) => {
-  const handleClick = (e) => {
+  const handleClick = e => {
     e.preventDefault();
     onPageChange(page);
   };
   // ....
   return (
     <li className="page-item">
-      <a href="#" onClick={ handleClick }  >{ page }</a>
+      <a href="#" onClick={handleClick}>
+        {page}
+      </a>
     </li>
   );
 };
@@ -43,106 +70,103 @@ const options = {
   pageButtonRenderer
 };
 
-const { regSvc, eventSvc}=apiSvc;
+const { regSvc, eventSvc } = apiSvc;
 
 class RegEdit extends Component {
+  state = {
+    pageMode: 0,
+    eventInfo: {},
+    regData: { amt_paid: false }
+  };
 
-  state={
-    pageMode:0,
-    eventInfo:{},
-    regData:{amt_paid:false}
+  componentDidMount = () => {
+    const { regData } = this.state;
+    regData.id = this.props.match.params.regId;
+    this.setState({ regInfo: regData, pageMode: regData.id > 0 ? 1 : 0 });
+    const params = queryString.parse(this.props.location.search);
+
+    if (params.event_id) regData.event_id = params.event_id;
+    this.setState({ regInfo: regData });
+    eventSvc.getInfo({ id: params.event_id }).then(r => {
+      this.setState({ eventInfo: r.data });
+      console.log(r);
+    });
+  };
+
+  handleSwitch = e => {
+    const { regData } = this.state;
+    regData[e.target.name] = e.target.checked;
+  };
+
+
+  handleChange=(item)=>{
+    console.log(item);
+   this.setState({selectedEvent:item})
   }
 
-
-  componentDidMount=()=> {
-
-
-    const {regData}=this.state;
-    regData.id=this.props.match.params.regId;
-    this.setState({regInfo:regData,pageMode:regData.id>0?1:0});
-    const params = queryString.parse(this.props.location.search)
-
-    if(params.event_id)
-    regData.event_id=params.event_id;
-    this.setState({regInfo:regData});
-      eventSvc.getInfo({id:params.event_id}).then(r=>{
-        this.setState({eventInfo:r.data});
-        console.log(r);
-      });
-  }
-
-  handleSwitch=(e)=>{
-    const {regData}=this.state;
-    regData[e.target.name]=e.target.checked;
- }
-
-  handleSubmit=(event)=>{
-    const {regData}=this.state;
+  handleSubmit = event => {
+    const { regData } = this.state;
     event.preventDefault();
     const formData = new FormData(event.target);
     for (var key of formData.keys()) {
-      regData[key]=formData.get(key);
-   }
-   regSvc.save(regData).then(r=>{
-
-
-   });
-
+      regData[key] = formData.get(key);
+    }
+    regSvc.save(regData).then(r => {});
 
     console.log(regData);
-
-
-  }
+  };
 
   render() {
-    const {eventInfo, pageMode,regData}=this.state;
+    const { eventInfo, pageMode, regData } = this.state;
 
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" md="12">
             <Card>
-              <CardHeader>{eventInfo.title}</CardHeader>
+              <CardHeader><h5>{eventInfo.title}</h5></CardHeader>
             </Card>
           </Col>
         </Row>
         <Row>
           <Col xs="12" md="12">
-          <Form onSubmit={this.handleSubmit} >
-           <Card>
-              <CardHeader>
-                {pageMode === 1 && <strong>Editing Registration - {this.state.regInfo.id} </strong>}
-                {pageMode === 0 && <strong>New Registrant Info </strong>}
-                <div className="pull-right">
-                  <Button
-                    className="mr-1"
-                    type="submit"
-                    size="sm"
-                    color="primary"
+            <Form onSubmit={this.handleSubmit}>
+              <Card>
+                <CardHeader>
+                  {pageMode === 1 && (
+                    <strong>
+                      Editing Registration - {this.state.regInfo.id}{" "}
+                    </strong>
+                  )}
+                  {pageMode === 0 && <strong>New Registrant Info </strong>}
+                  <div className="pull-right">
+                    <Button
+                      className="mr-1"
+                      type="submit"
+                      size="sm"
+                      color="primary"
+                    >
+                      <i className="fa fa-dot-circle-o" /> Submit
+                    </Button>
 
-                  >
-                    <i className="fa fa-dot-circle-o" /> Submit
-                  </Button>
-
-                  <Button
-                    className="ml-1"
-                    type="reset"
-                    size="sm"
-                    color="danger"
-                  >
-                    <i className="fa fa-ban" /> Reset
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardBody>
-
+                    <Button
+                      className="ml-1"
+                      type="reset"
+                      size="sm"
+                      color="danger"
+                    >
+                      <i className="fa fa-ban" /> Reset
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardBody>
                   <FormGroup row>
                     <Col md="3">
                       <Label htmlFor="reg_name">Name</Label>{" "}
                     </Col>
                     <Col xs="12" md="9">
                       {" "}
-                      <Input
+                      <Input defaultValue={regData.fullname}
                         type="text"
                         id="reg_name"
                         name="reg_name"
@@ -157,7 +181,7 @@ class RegEdit extends Component {
                     </Col>
                     <Col xs="12" md="9">
                       {" "}
-                      <Input
+                      <Input defaultValue={regData.age}
                         type="number"
                         id="reg_age"
                         name="reg_age"
@@ -178,6 +202,7 @@ class RegEdit extends Component {
                           id="reg_genderm"
                           name="reg_gender"
                           value="M"
+                          defaultChecked={regData.gender==="M"}
                         />
                         <Label
                           className="form-check-label"
@@ -194,6 +219,7 @@ class RegEdit extends Component {
                           id="reg_genderf"
                           name="reg_gender"
                           value="F"
+                          defaultChecked={regData.gender==="F"?true:false}
                         />
                         <Label
                           className="form-check-label"
@@ -206,12 +232,13 @@ class RegEdit extends Component {
                     </Col>
                   </FormGroup>
 
+
                   <FormGroup row>
                     <Col md="3">
                       <Label>Category</Label>
                     </Col>
                     <Col md="9">
-                    <FormGroup check inline>
+                      <FormGroup check inline>
                         <Input
                           className="form-check-input"
                           type="radio"
@@ -244,7 +271,7 @@ class RegEdit extends Component {
                         </Label>
                       </FormGroup>
                       <FormGroup check inline>
-                      <Input
+                        <Input
                           className="form-check-input"
                           type="radio"
                           id="reg-is-member2"
@@ -260,7 +287,7 @@ class RegEdit extends Component {
                         </Label>
                       </FormGroup>
                       <FormGroup check inline>
-                      <Input
+                        <Input
                           className="form-check-input"
                           type="radio"
                           id="reg-is-member3"
@@ -281,6 +308,27 @@ class RegEdit extends Component {
 
                   <FormGroup row>
                     <Col md="3">
+                      <Label>Sub-Category</Label>
+                    </Col>
+
+                    <Col xs="12" md="9">
+                        <Select
+                          name="reg_student_type"
+                          isClearable
+                          isSearchable
+                          options={studentTypes}
+                          onChange={this.handleChange}
+                          placeholder="Select Type"
+                          isSearchable={true}
+                        />
+
+                    </Col>
+                  </FormGroup>
+
+
+
+                  <FormGroup row>
+                    <Col md="3">
                       <Label htmlFor="reg_email">Email </Label>
                     </Col>
                     <Col xs="12" md="9">
@@ -296,9 +344,7 @@ class RegEdit extends Component {
 
                   <FormGroup row>
                     <Col md="3">
-                      <Label htmlFor="arrival_date">
-                        Arriving on
-                      </Label>
+                      <Label htmlFor="arrival_date">Arriving on</Label>
                     </Col>
                     <Col xs="12" md="9">
                       <Input
@@ -307,14 +353,11 @@ class RegEdit extends Component {
                         name="arrival_date"
                         placeholder="arrival date"
                       />
-
                     </Col>
                   </FormGroup>
                   <FormGroup row>
                     <Col md="3">
-                      <Label htmlFor="depart_date">
-                      Departing on
-                      </Label>
+                      <Label htmlFor="depart_date">Departing on</Label>
                     </Col>
                     <Col xs="12" md="9">
                       <Input
@@ -326,38 +369,83 @@ class RegEdit extends Component {
                     </Col>
                   </FormGroup>
 
-
-
-
-
-
-
                   <FormGroup row>
                     <Col md="3">
                       <Label>Other Status</Label>
                     </Col>
                     <Col md="9">
-                      <FormGroup  >
-                      <AppSwitch id="amt_paid" name="amt_paid"   checked={ regData.amt_paid } onChange={this.handleSwitch} size="sm" className={'mx-1'} variant={'pill'} color={'success'} outline={'alt'}   label dataOn={'\u2713'} dataOff={'\u2715'} />
-                      <Label className="form-check-label" check htmlFor="amt-paid">Amt Paid ?</Label>
-
-
+                      <FormGroup>
+                        <AppSwitch
+                          id="amt_paid"
+                          name="amt_paid"
+                          checked={regData.amt_paid}
+                          onChange={this.handleSwitch}
+                          size="sm"
+                          className={"mx-1"}
+                          variant={"pill"}
+                          color={"success"}
+                          outline={"alt"}
+                          label
+                          dataOn={"\u2713"}
+                          dataOff={"\u2715"}
+                        />
+                        <Label
+                          className="form-check-label"
+                          check
+                          htmlFor="amt-paid"
+                        >
+                          Amt Paid ?
+                        </Label>
                       </FormGroup>
-                      <FormGroup  >
-                      <AppSwitch  id="arrived" name="arrived" checked={regData.is_arrived}  onChange={this.handleSwitch} size="sm" className={'mx-1'} variant={'pill'} color={'success'} outline={'alt'}   label dataOn={'\u2713'} dataOff={'\u2715'} />
-                      <Label className="form-check-label" check htmlFor="arrived">Arrived ?</Label>
-
+                      <FormGroup>
+                        <AppSwitch
+                          id="arrived"
+                          name="arrived"
+                          checked={regData.is_arrived}
+                          onChange={this.handleSwitch}
+                          size="sm"
+                          className={"mx-1"}
+                          variant={"pill"}
+                          color={"success"}
+                          outline={"alt"}
+                          label
+                          dataOn={"\u2713"}
+                          dataOff={"\u2715"}
+                        />
+                        <Label
+                          className="form-check-label"
+                          check
+                          htmlFor="arrived"
+                        >
+                          Arrived ?
+                        </Label>
                       </FormGroup>
 
-                      <FormGroup  >
-                      <AppSwitch id="departed" name="departed" checked={regData.is_departed} onChange={this.handleSwitch} size="sm" className={'mx-1'} variant={'pill'} color={'success'} outline={'alt'}   label dataOn={'\u2713'} dataOff={'\u2715'} />
-                      <Label className="form-check-label" check htmlFor="departed">Departed ?</Label>
-
+                      <FormGroup>
+                        <AppSwitch
+                          id="departed"
+                          name="departed"
+                          checked={regData.is_departed}
+                          onChange={this.handleSwitch}
+                          size="sm"
+                          className={"mx-1"}
+                          variant={"pill"}
+                          color={"success"}
+                          outline={"alt"}
+                          label
+                          dataOn={"\u2713"}
+                          dataOff={"\u2715"}
+                        />
+                        <Label
+                          className="form-check-label"
+                          check
+                          htmlFor="departed"
+                        >
+                          Departed ?
+                        </Label>
                       </FormGroup>
-
                     </Col>
                   </FormGroup>
-
 
                   <FormGroup row>
                     <Col md="3">
@@ -373,36 +461,32 @@ class RegEdit extends Component {
                       />
                     </Col>
                   </FormGroup>
-
-
-              </CardBody>
-              <CardFooter>
-              <Button
+                </CardBody>
+                <CardFooter>
+                  <Button
                     className="mr-1"
                     type="submit"
                     size="sm"
                     color="primary"
-
                   >
-                  <i className="fa fa-dot-circle-o" /> Submit
-                </Button>
+                    <i className="fa fa-dot-circle-o" /> Submit
+                  </Button>
 
-                <Button
-                  className="ml-1"
-                  type="reset"
-                  size="sm"
-                  color="danger"
-                >
-                  <i className="fa fa-ban" /> Reset
-                </Button>
-              </CardFooter>
-            </Card>
+                  <Button
+                    className="ml-1"
+                    type="reset"
+                    size="sm"
+                    color="danger"
+                  >
+                    <i className="fa fa-ban" /> Reset
+                  </Button>
+                </CardFooter>
+              </Card>
             </Form>
-           </Col>
+          </Col>
         </Row>
       </div>
     );
   }
 }
 export default RegEdit;
-

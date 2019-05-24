@@ -1,5 +1,10 @@
 const db = require('./database');
+const monologue = require('monologue');
 //console.log("db",db);
+
+const formatSQL=(sql)=>{
+    return sql.replace(/`/g,'');
+}
 
 function connectionCheck() {
     return new Promise((resolve,reject) => {
@@ -22,5 +27,9 @@ function connectionRelease() {
 
 module.exports = {
     connectionCheck:connectionCheck(),
-    connectionRelease:connectionRelease()   
+    connectionRelease:connectionRelease(),
+    msql:monologue,
+    formatSQL:formatSQL
 }
+
+

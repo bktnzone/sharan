@@ -1,7 +1,7 @@
-var venueModel = require("../models/venue.model.js");
+var regModel = require("../models/registration.model");
 
 
-var venueService = {
+var regService = {
     getList: getList,
     getById:getById,
     add: addReg,
@@ -9,9 +9,20 @@ var venueService = {
     delete:removeReg
 }
 
+
+function getList(params) {
+    return new Promise((resolve,reject) => {
+        regModel.getList(params).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
 function addReg(entityData) {
     return new Promise((resolve,reject) => {
-        venueModel.add(entityData).then((data)=>{
+        regModel.add(entityData).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -23,7 +34,7 @@ function addReg(entityData) {
 
 function updateReg(id,userData,callback) {
     return new Promise((resolve,reject) => {
-        venueModel.update(id,entityData).then((data)=>{
+        regModel.update(id,entityData).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -34,7 +45,7 @@ function updateReg(id,userData,callback) {
 
 function removeReg(id) {
     return new Promise((resolve,reject) => {
-        venueModel.remove(id).then((data)=>{
+        regModel.remove(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -42,26 +53,19 @@ function removeReg(id) {
     })
 }
 
-function getList() {
-    return new Promise((resolve,reject) => {
-        venueModel.getList().then((data)=>{
-            resolve(data);
-        }).catch((err) => {
-            reject(err);
-        })
-    });
-}
 
-function getById(id) {
+function getById(params) {
     return new Promise((resolve,reject) => {
-        venueModel.getById(id).then((data)=>{
-            resolve(data);
+        regModel.getById(params).then((data)=>{
+            const actualData=data.length>0?data[0]:{};
+            resolve(actualData);
         }).catch((err) => {
+            console.log(err);
             reject(err);
         })
     });
 }
 
 
-module.exports = venueService;
+module.exports = regService;
 

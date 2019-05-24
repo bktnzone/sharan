@@ -1,18 +1,31 @@
-const authenticService = require('../services/authentic.service');
-var schema = require('../schema/loginValidationSchema.json')
-var iValidator = require('../common/iValidator');
-var errorCode = require('../common/error-code');
-var errorMessage = require('../common/error-methods');
-var mail = require('../common/mailer.js');
+const ctrl = require('../controllers/authController');
+const express = require('express');
+const router = express.Router();
+
+
+router.route('/login').get(ctrl.login);
+
+/*const authenticService = require('../../services/auth.service');
+var schema = require('../../common/schema/loginValidationSchema.json')
+var iValidator = require('../../common/iValidator');
+var errorCode = require('../../common/error-code');
+var errorMessage = require('../../common/error-methods');
+var mail = require('../../common/mailer.js');
 
 
 const jwt = require('jsonwebtoken');
 
 function init(router) {
     router.route('/login')
-        .post(authentic);
+        .post(authentic)
+        .get(get1);
     router.route('/signup')
           .post(signup);
+}
+
+function get1(req,res) {
+  res.status(422).send("simple");
+  next();
 }
 
 function authentic(req,res) {
@@ -68,6 +81,8 @@ function signup(req,res) {
 
 
 module.exports.init = init;
+*/
+module.exports=router;
 
 
 

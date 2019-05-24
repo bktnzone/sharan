@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getList } from "../../api/registrant";
 import Select from "react-select";
 import { AppSwitch } from '@coreui/react'
+import {apiServices as apiSvc} from "../../api/service";
 import {
   Form,
   FormGroup,
@@ -29,12 +30,15 @@ import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 const { SearchBar } = Search;
 
+const { regSvc, eventSvc}=apiSvc;
+
 const columns = [
   {
     dataField: "id",
     text: "RegId",
     formatter: (cellContent, row) => {
-      const path = "/regs/" + row.id;
+
+      const path = "/regs/" + row.id + "?event_id=" + row.event_id;
       return (
         <Link to={path} >
           {row.id}
@@ -75,14 +79,13 @@ const columns = [
     searchable: false
   },
   {
-    dataField: "id",
+    dataField: "arrived",
     text: "Arrived",
     formatter: (cellContent , row ) => {
 
       return <React.Fragment>
           <AppSwitch  size="sm" className={'mx-1'} variant={'pill'} color={'success'} outline={'alt'} checked label dataOn={'\u2713'} dataOff={'\u2715'} />
-
-              </React.Fragment>
+        </React.Fragment>
 
 
 
@@ -112,6 +115,8 @@ const pageButtonRenderer = ({
   );
 };
 
+
+
 const options = {
   pageButtonRenderer
 };
@@ -120,33 +125,43 @@ const selectRow = {
   mode: "checkbox" // multiple row selection
 };
 
-const eventList = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" }
-];
+
+const customControlStyles = base => ({
+  height: 200,
+});
 
 class RegList extends Component {
   state = {
     //decodedToken: getDecodedToken(), // retrieves the token from local storage if valid, else will be null
     regDataList: [],
-    selectedOption: { value: "chocolate", label: "Chocolate" }
+    selectedEvent:null,
+    eventList:[]
   };
 
-  componentDidMount() {
+  componentDidMount=async ()=> {
+    await this.getEvents();
     this.load();
   }
 
+  getEvents=async ()=>{
+
+    eventSvc.getList().then(r=>{
+      const events=r.data.items.map(e=> {return {"label":e.title,"value":e.id};});
+      this.setState({eventList:events});
+    });
+  }
+
+
   handleChange=(item)=>{
-    //this.props.onChangeParentComponent(val['value']);
-   this.setState({selectedOption:item})
+    console.log(item);
+   this.setState({selectedEvent:item})
   }
 
   load() {
     // display loading page
     this.setState({ loading: true });
     // load all of the rooms from the database
-    getList()
+    regSvc.getList()
       .then(regs => {
         this.setState({ regDataList: regs.data.items });
 
@@ -160,13 +175,19 @@ class RegList extends Component {
   }
 
   render() {
-    const { regDataList, selectedOption } = this.state;
+    const {selectedEvent, eventList,regDataList } = this.state;
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xl={12} lg={12}>
+
+          <Col xl={4} lg={4} className="pull-left">
             <Select
-              value={selectedOption}
+
+styles={ customControlStyles}
+             defaultValue={eventList[0]}
+              isClearable
+              isSearchable
+
               onChange={this.handleChange}
               options={eventList}
               placeholder="Select Event"
@@ -175,7 +196,7 @@ class RegList extends Component {
           </Col>
         </Row>
 
-        <Row>
+        { selectedEvent &&  <Row >
           <Col xl={12} lg={12}>
             <Card>
               <CardHeader>
@@ -193,17 +214,17 @@ class RegList extends Component {
                     <div>
                       <div className="pull-left ml-0">
 
-                          <Link to="/regs/0">
+                          <Link to={"/regs/0?event_id=" + selectedEvent.value}>
                             <Button renderas="button" color="primary" size="sm">
                               <span>Add New</span>
                             </Button>
                           </Link>
-                          <Link to="/regs/0">
-  <Button renderas="button" color="danger" size="sm" className='ml-1'>
-    <span>Delete</span>
-  </Button>
+                          <Link to={"/regs/0?event_id=" + selectedEvent.value}>
+                          <Button renderas="button" color="danger" size="sm" className='ml-1'>
+                            <span>Delete</span>
+                          </Button>
 
-</Link>
+                      </Link>
 
                       </div>
 
@@ -211,7 +232,7 @@ class RegList extends Component {
                         <SearchBar {...props.searchProps} />
                       </div>
 
-                      <BootstrapTable
+                      <BootstrapTable keyField="id" key="tbl1"
                         className="table table-sm table-hover"
                         selectRow={selectRow}
                         striped
@@ -228,7 +249,8 @@ class RegList extends Component {
             </Card>
           </Col>
         </Row>
-      </div>
+
+                  }</div>
     );
   }
 }

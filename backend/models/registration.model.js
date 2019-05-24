@@ -1,7 +1,9 @@
 var db = require('../config/database');
-var dbFunc = require('../config/db-function');
+const dbConn = require('../config/db-function');
+const msql=dbConn.msql;
+const format=dbConn.formatSQL;
 
-var roomModel = {
+var regModel = {
     getList:getList,
     add:add,
     update:update,
@@ -9,77 +11,42 @@ var roomModel = {
     getById:getById
 }
 
-function getList() {
-    return new Promise((resolve,reject) => {
-        db.query(`SELECT 1`,(error,rows,fields)=>{
-            if(!!error) {
-                dbFunc.connectionRelease;
-                reject(error);
-            } else {
-                dbFunc.connectionRelease;
-                resolve(rows[0]);
-            }
-       });
-    });
+async function getList (params) {
+    const sql= msql()
+    .select( "r.*,e.title,e.description", 'bm_registrations r' )
+    .ljoin( "bm_events e", "e.id = r.event_id" )
+    .where({'r.event_id':params.event_id})
+    .sql();
+    return  db.query(format(sql));
 }
 
-function getById(id) {
-    return new Promise((resolve,reject) => {
-        db.query("SELECT * FROM test WHERE id ="+id.id,(error,rows,fields)=>{
-            if(!!error) {
-                dbFunc.connectionRelease;
-                reject(error);
-            } else {
-                dbFunc.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+async function getById(params) {
+    const sql= msql()
+
+    .select( "r.*,e.title,e.description", 'bm_registrations r' )
+    .ljoin( "bm_events e", "e.id = r.event_id" )
+    .where({'r.id':params.reg_id})
+    .sql();
+    console.log(params);
+    return  db.query(format(sql));
 }
 
-function add(room) {
-     return new Promise((resolve,reject) => {
-         db.query("INSERT INTO test(name,age,state,country)VALUES('"+user.name+"','"+user.age+"','"+user.state+"','"+user.country+"')",(error,rows,fields)=>{
-            if(error) {
-                dbFunc.connectionRelease;
-                reject(error);
-            } else {
-                dbFunc.connectionRelease;
-                resolve(rows);
-            }
-          });
-        });
+function add(reg) {
+    const sql=  msql()
+    .insert( 'bm_registrations', [reg] )
+    .sql();
+
 }
 
 
-function update(id,room) {
-    return new Promise((resolve,reject) => {
-        db.query("UPDATE test set name='"+user.name+"',age='"+user.age+"',state='"+user.state+"',country='"+user.country+"' WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbFunc.connectionRelease;
-                reject(error);
-            } else {
-                dbFunc.connectionRelease;
-                resolve(rows);
-            }
-       });
-    })
+function update(id,reg) {
+
 }
 
 function remove(id) {
-   return new Promise((resolve,reject) => {
-        db.query("DELETE FROM test WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbFunc.connectionRelease;
-                reject(error);
-            } else {
-                dbFunc.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+
 }
 
 
-module.exports = roomModel;
+module.exports = regModel;
 

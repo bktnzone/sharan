@@ -1,5 +1,5 @@
 var db = require('../config/database');
-var dbFunc = require('../config/db-function');
+const dbConn = require('../config/db-function');
 const bcrypt = require('bcrypt');
 
 var authenticModel = {
@@ -44,18 +44,18 @@ function signup(user) {
                 user.password = hash;
                 db.query("SELECT * FROM bm_users WHERE username='"+user.username+"'", (error, rows, fields) => {
                     if (error) {
-                        dbFunc.connectionRelease;
+                        dbConn.connectionRelease;
                         reject(error);
                     } else if(rows.length>0) {
-                        dbFunc.connectionRelease;
+                        dbConn.connectionRelease;
                         reject({"success":false,"message":"user already exist ! try with different user"});
                     } else {
                         db.query("INSERT INTO bm_users(username,password)VALUES('" + user.username + "','" + user.password + "')", (error, rows, fields) => {
                             if (error) {
-                                dbFunc.connectionRelease;
+                                dbConn.connectionRelease;
                                 reject(error);
                             } else {
-                                dbFunc.connectionRelease;
+                                dbConn.connectionRelease;
                                 resolve(rows);
                             }
                         });

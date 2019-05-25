@@ -1,8 +1,4 @@
 const regSVC = require("../../services/registration.service");
-var schema = require("../../common/schema/userValidationSchema.json");
-var iValidator = require("../../common/iValidator");
-var errorCode = require("../../common/error-code");
-var errorMessage = require("../../common/error-methods");
 
 module.exports = {
   getList: async (req, res, next) => {
@@ -18,8 +14,9 @@ module.exports = {
   add: async (req, res, next) => {
     try {
       const regInfo = req.body;
+      console.log(req.body);
       const result = await regSVC.add(regInfo);
-      req.data = { items: result };
+      req.data = {result:"added"};
     } catch (err) {
       req.err = err;
     }
@@ -29,7 +26,7 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const regInfo = req.body;
-      const result = await regSVC.update(regInfo);
+      const result = await regSVC.update(req.params.id,regInfo);
       req.data = { items: result };
     } catch (err) {
       req.err = err;
@@ -39,8 +36,8 @@ module.exports = {
 
   delete: async (req, res, next) => {
     try {
-      const result = await regSVC.remove({ reg_id: req.params.id });
-      req.data = { items: result };
+      const result = await regSVC.delete(  req.params.id  );
+      req.data = {};
     } catch (err) {
       req.err = err;
     }

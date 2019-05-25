@@ -1,85 +1,65 @@
 var db = require('../config/database');
 const dbConn = require('../config/db-function');
+const msql=dbConn.msql;
+const format=dbConn.formatSQL;
 
-var eventModel = {
-   getEvents:getEvents,
-   addEvent:addEvent,
-   updateEvent:updateEvent,
-   deleteEvent:deleteEvent,
-   getById:getById
+var regModel = {
+    getList:getList,
+    add:add,
+    update:update,
+    remove:remove,
+    getById:getById
 }
 
-function getAllUser() {
-    return new Promise((resolve,reject) => {
-        db.query(`SELECT * FROM bm_users`,(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows[0]);
-            }
-       });
-    });
+async function getList (params) {
+    const sql= msql()
+    .select( "E.*", 'bm_events E' )
+    .ljoin( "bm_venues V", "v.id = E.venue_id" )
+    .where({'E.venue_id':params.venue_id})
+    .sql();
+    return  db.query(format(sql));
 }
 
-function getById(id) {
-    return new Promise((resolve,reject) => {
-        db.query("SELECT * FROM bm_venues WHERE id ="+id.id,(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+async function getById(params) {
+    const sql= msql()
+
+    .select( "E.*", 'bm_events E' )
+    .ljoin( "bm_venues V", "V.id = E.venue_id" )
+    .where({'E.id':params.event_id})
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
 }
 
-function addEvent(user) {
-     return new Promise((resolve,reject) => {
-         db.query("INSERT INTO test(name,age,state,country)VALUES('"+user.name+"','"+user.age+"','"+user.state+"','"+user.country+"')",(error,rows,fields)=>{
-            if(error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-          });
-        });
+async function add(eventInfo) {
+    const sql=  msql()
+    .insert( 'bm_events', [eventInfo] )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
 }
 
 
-function updateEvent(id,user) {
-    return new Promise((resolve,reject) => {
-        db.query("UPDATE test set name='"+user.name+"',age='"+user.age+"',state='"+user.state+"',country='"+user.country+"' WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    })
+async function update(id,eventInfo) {
+    const sql=  msql()
+    .update( "bm_events", eventInfo )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
+
 }
 
-function deleteEvent(id) {
-   return new Promise((resolve,reject) => {
-        db.query("DELETE FROM test WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+async  function remove(id) {
+    const sql=  msql()
+    .delete( "bm_events" )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
+
 }
 
 
-module.exports = userModel;
+module.exports = regModel;
 

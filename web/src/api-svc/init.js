@@ -5,7 +5,7 @@ const baseURL = process.env.REACT_APP_API_URL
 
 // Create an axios instance
 const api = axios.create({
-  baseURL
+  baseURL: baseURL + "/api"
 })
 
 export function setToken(token) {

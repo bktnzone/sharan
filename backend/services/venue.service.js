@@ -9,9 +9,9 @@ var venueService = {
     delete:removeVenue
 }
 
-function addVenue(entityData) {
+function addVenue(venueInfo) {
     return new Promise((resolve,reject) => {
-        venueModel.add(entityData).then((data)=>{
+        venueModel.add(venueInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -21,9 +21,9 @@ function addVenue(entityData) {
 }
 
 
-function updateVenue(id,userData,callback) {
+function updateVenue(id,venueInfo) {
     return new Promise((resolve,reject) => {
-        venueModel.update(id,entityData).then((data)=>{
+        venueModel.update(id,venueInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

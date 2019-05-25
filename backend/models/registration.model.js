@@ -31,19 +31,32 @@ async function getById(params) {
     return  db.query(format(sql));
 }
 
-function add(reg) {
+async function add(regInfo) {
     const sql=  msql()
-    .insert( 'bm_registrations', [reg] )
+    .insert( 'bm_registrations', [regInfo] )
     .sql();
-
+    console.log(format(sql));
+    return  db.query(format(sql));
 }
 
 
-function update(id,reg) {
+async function update(id,regInfo) {
+    const sql=  msql()
+    .update( "bm_registrations", regInfo )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
 
 }
 
-function remove(id) {
+async  function remove(id) {
+    const sql=  msql()
+    .delete( "bm_registrations" )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
 
 }
 

@@ -1,17 +1,20 @@
-const eventModel = require("../models/event.model.js");
+const foodReqModel = require("../models/foodReq.model.js");
 
 
-const foodReqService = {
+const foodReqSvc = {
     getList: getList,
     getById:getById,
-    add: addReq,
-    update:updateReq,
-    remove:removeReq
+    add: addFoodReq,
+    update:updateFoodReq,
+    delete:removeFoodReq,
+   // addFloor:addFloor,
+   // addFloor:updateFloor,
+   // addFloor:removeFloor,
 }
 
-function addReq(entityData) {
+function addFoodReq(foodReqInfo) {
     return new Promise((resolve,reject) => {
-        eventModel.add(entityData).then((data)=>{
+        foodReqModel.add(foodReqInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -21,9 +24,9 @@ function addReq(entityData) {
 }
 
 
-function updateReq(id,userData,callback) {
+function updateFoodReq(id,foodReqInfo) {
     return new Promise((resolve,reject) => {
-        eventModel.update(id,entityData).then((data)=>{
+        foodReqModel.update(id,foodReqInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -32,9 +35,9 @@ function updateReq(id,userData,callback) {
 
 }
 
-function removeReq(id) {
+function removeFoodReq(id) {
     return new Promise((resolve,reject) => {
-        eventModel.remove(id).then((data)=>{
+        foodReqModel.remove(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -44,7 +47,7 @@ function removeReq(id) {
 
 function getList() {
     return new Promise((resolve,reject) => {
-        eventModel.getList().then((data)=>{
+        foodReqModel.getList().then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -54,7 +57,7 @@ function getList() {
 
 function getById(id) {
     return new Promise((resolve,reject) => {
-        eventModel.getById(id).then((data)=>{
+        foodReqModel.getById(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -63,5 +66,5 @@ function getById(id) {
 }
 
 
-module.exports = eventService;
+module.exports = foodReqSvc;
 

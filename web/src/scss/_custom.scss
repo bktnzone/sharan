@@ -1,7 +1,7 @@
 // Here you can add other styles
 
 $sidebar-bg: #fff;
-$body-bg: rgba(0, 128, 0, 0.1);
+$body-bg: #fff;
 
 
 @import "node_modules/bootstrap/scss/bootstrap";
@@ -15,4 +15,38 @@ $body-bg: rgba(0, 128, 0, 0.1);
   padding: 0.25rem;
   vertical-align: top;
   border-top: 1px solid #c8ced3;
+}
+
+.sidebar, .app-header{
+
+  background-image: linear-gradient(110deg,#3c4144 1%,#ccbbbb 100%) !important;
+
+}
+.sidebar .nav-link.active {
+  color: #fff;
+  background: #5a6065;
+}
+
+.sidebar .nav-link:hover {
+  color: #fff;
+  background: #5a6065;
+}
+.app-header .nav-link{
+  color:#fff !important;
+}
+
+a:not([href]):not([tabindex]) {
+  color: inherit;
+  text-decoration: none;
+  margin-top: -10px;
+  margin-left: -20px;
+}
+
+.allotment table th{
+  border-top:0 !important;
+  border-bottom:0 !important;
+  background: #efefef;
+  padding: 0;
+  margin:0;
+  font-size:0.8em;
 }

@@ -1,20 +1,20 @@
-var venueModel = require("../models/venue.model.js");
+var roomModel = require("../models/room.model.js");
 
 
-var venueService = {
+var roomService = {
     getList: getList,
     getById:getById,
     add: addRoom,
     update:updateRoom,
     delete:removeRoom,
-    addEvtRoom: addEvtRoom,
-    updateEvtRoom:updateEvtRoom,
-    deleteEvtRoom:removeEvtRoom
+    addEvtRoom: getById,
+    updateEvtRoom:getById,
+    deleteEvtRoom:getById
 }
 
-function addVenue(entityData) {
+function addRoom(roomInfo) {
     return new Promise((resolve,reject) => {
-        venueModel.add(entityData).then((data)=>{
+        roomModel.add(roomInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -24,9 +24,9 @@ function addVenue(entityData) {
 }
 
 
-function updateVenue(id,userData,callback) {
+function updateRoom(id,roomInfo) {
     return new Promise((resolve,reject) => {
-        venueModel.update(id,entityData).then((data)=>{
+        roomModel.update(id,roomInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -35,9 +35,9 @@ function updateVenue(id,userData,callback) {
 
 }
 
-function removeVenue(id) {
+function removeRoom(id) {
     return new Promise((resolve,reject) => {
-        venueModel.remove(id).then((data)=>{
+        roomModel.remove(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -47,7 +47,7 @@ function removeVenue(id) {
 
 function getList() {
     return new Promise((resolve,reject) => {
-        venueModel.getList().then((data)=>{
+        roomModel.getList().then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -57,7 +57,7 @@ function getList() {
 
 function getById(id) {
     return new Promise((resolve,reject) => {
-        venueModel.getById(id).then((data)=>{
+        roomModel.getById(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -66,5 +66,5 @@ function getById(id) {
 }
 
 
-module.exports = venueService;
+module.exports = roomService;
 

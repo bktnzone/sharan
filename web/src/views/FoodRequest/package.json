@@ -1,6 +1,6 @@
 {
-  "name": "UserList",
+  "name": "ReqList",
   "version": "0.0.0",
   "private": true,
-  "main": "./UserList.js"
+  "main": "./ReqList.js"
 }

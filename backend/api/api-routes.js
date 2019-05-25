@@ -14,15 +14,16 @@ const handleSuccess = (req, res, next) => {
   }
 };
 
+//router.use('/auth', routers.authRoute);
 router.get("/health-check", (req, res) => res.send("OK"));
 
-console.log(routers);
-//router.use('/auth', routers.authRoute);
-router.use("/users", routers.regRoute);
+//router.use("/users", routers.regRoute);
 router.use("/regs", routers.regRoute);
+router.use("/events", routers.eventRoute);
 router.use("/auth", routers.authRoute);
-
-
+router.use("/buildings", routers.bldgRoute);
+router.use("/venues", routers.venueRoute);
+router.use("/food-reqs", routers.foodReqRoute);
 
 router.use(handleSuccess);
 module.exports = router;

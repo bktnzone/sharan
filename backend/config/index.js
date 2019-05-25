@@ -7,7 +7,6 @@ const connection = mysql.createConnection({
   database : 'bk_sharan'
 });
 
-console.log("running mysql.createConnection")
 
 module.exports = {
   connection

@@ -7,5 +7,5 @@ const configVars={
     db_password: process.env.MYSQL_DB_PASSWORD,
     port: process.env.PORT
   };
-console.log(configVars);
+
 module.exports = configVars

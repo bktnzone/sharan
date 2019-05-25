@@ -20,9 +20,17 @@ function getList(params) {
     });
 }
 
-function addReg(entityData) {
-    return new Promise((resolve,reject) => {
-        regModel.add(entityData).then((data)=>{
+async function addReg(params) {
+    return new Promise(async (resolve,reject) => {
+       const inserted=await regModel.add(params);
+       resolve(inserted);
+});
+}
+
+
+async function updateReg(id,regInfo) {
+    return new Promise(async (resolve,reject) => {
+        regModel.update(id,regInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -31,20 +39,8 @@ function addReg(entityData) {
 
 }
 
-
-function updateReg(id,userData,callback) {
-    return new Promise((resolve,reject) => {
-        regModel.update(id,entityData).then((data)=>{
-            resolve(data);
-        }).catch((err) => {
-            reject(err);
-        })
-    })
-
-}
-
-function removeReg(id) {
-    return new Promise((resolve,reject) => {
+async function removeReg(id) {
+    return new Promise(async (resolve,reject) => {
         regModel.remove(id).then((data)=>{
             resolve(data);
         }).catch((err) => {

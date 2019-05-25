@@ -20,23 +20,8 @@ import {
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
 import Select from "react-select";
-import { apiServices as apiSvc } from "../../api/service";
+import { apiServices as apiSvc } from "../../api-svc";
 import { AppSwitch } from "@coreui/react";
-
-const columns = [
-  {
-    dataField: "id",
-    text: "Product ID"
-  },
-  {
-    dataField: "name",
-    text: "Product Name"
-  },
-  {
-    dataField: "price",
-    text: "Product Price"
-  }
-];
 
 const studentTypes = [
   { value: 1, label: "Kumar" },
@@ -79,14 +64,22 @@ class RegEdit extends Component {
     regData: { amt_paid: false }
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const { regData } = this.state;
     regData.id = this.props.match.params.regId;
     this.setState({ regInfo: regData, pageMode: regData.id > 0 ? 1 : 0 });
     const params = queryString.parse(this.props.location.search);
 
     if (params.event_id) regData.event_id = params.event_id;
-    this.setState({ regInfo: regData });
+
+    if(regData.id>0){
+      let regInfoData=await regSvc.getInfo({ id: regData.id });
+      params.event_id=regInfoData.data.event_id;
+
+      this.setState({ regData: regInfoData.data });
+    }
+
+
     eventSvc.getInfo({ id: params.event_id }).then(r => {
       this.setState({ eventInfo: r.data });
       console.log(r);
@@ -98,6 +91,16 @@ class RegEdit extends Component {
     regData[e.target.name] = e.target.checked;
   };
 
+
+  handleInputChange=(event)=> {
+    const target = event.target;
+    const value = target.type === 'checkbox' || target.type ==='radio' ? target.checked : target.value;
+    const name = target.name;
+
+    let regDataNew={...this.state.regData,[name]:target.value};
+    //regDataNew[name]=target.value;
+    this.setState({regData:regDataNew});
+  }
 
   handleChange=(item)=>{
     console.log(item);
@@ -165,12 +168,13 @@ class RegEdit extends Component {
                       <Label htmlFor="reg_name">Name</Label>{" "}
                     </Col>
                     <Col xs="12" md="9">
-                      {" "}
+
                       <Input defaultValue={regData.fullname}
                         type="text"
                         id="reg_name"
                         name="reg_name"
                         placeholder="enter full name of the registrant"
+                        onChange={this.handleInputChange}
                       />{" "}
                     </Col>
                   </FormGroup>
@@ -195,35 +199,41 @@ class RegEdit extends Component {
                       <Label>Gender</Label>
                     </Col>
                     <Col md="9">
-                      <FormGroup check inline>
+                      {
+                        JSON.stringify(this.state)
+                      }
+                      <FormGroup  inline>
                         <Input
                           className="form-check-input"
                           type="radio"
                           id="reg_genderm"
-                          name="reg_gender"
+                          name="gender"
                           value="M"
-                          defaultChecked={regData.gender==="M"}
+                          checked={this.state.regData.gender === 'M'}
+                          onChange={this.handleInputChange}
                         />
                         <Label
                           className="form-check-label"
-                          check
+
                           htmlFor="reg_genderm"
                         >
                           Male
                         </Label>
                       </FormGroup>
-                      <FormGroup check inline>
+                      <FormGroup  inline>
+
                         <Input
                           className="form-check-input"
                           type="radio"
                           id="reg_genderf"
-                          name="reg_gender"
+                          name="gender"
                           value="F"
-                          defaultChecked={regData.gender==="F"?true:false}
+                          checked={this.state.regData.gender === 'F'}
+                          onChange={this.handleInputChange}
                         />
                         <Label
                           className="form-check-label"
-                          check
+
                           htmlFor="reg_genderf"
                         >
                           Female
@@ -245,6 +255,8 @@ class RegEdit extends Component {
                           id="reg-is-member1"
                           name="reg_member_type"
                           value="1"
+                          checked={this.state.regData.gender === 'M'}
+                          onChange={this.handleInputChange}
                         />
                         <Label
                           className="form-check-label"

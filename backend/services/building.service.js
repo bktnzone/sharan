@@ -4,17 +4,17 @@ const buildingModel = require("../models/building.model.js");
 const buildingService = {
     getList: getList,
     getById:getById,
-    add: addbuilding,
-    update:updatebuilding,
-    delete:removebuilding,
-    addFloor:addFloor,
-    addFloor:updateFloor,
-    addFloor:removeFloor,
+    add: addBuilding,
+    update:updateBuilding,
+    delete:removeBuilding,
+   // addFloor:addFloor,
+   // addFloor:updateFloor,
+   // addFloor:removeFloor,
 }
 
-function addbuilding(entityData) {
+function addBuilding(bldgInfo) {
     return new Promise((resolve,reject) => {
-        buildingModel.add(entityData).then((data)=>{
+        buildingModel.add(bldgInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -24,9 +24,9 @@ function addbuilding(entityData) {
 }
 
 
-function updatebuilding(id,userData,callback) {
+function updateBuilding(id,bldgInfo) {
     return new Promise((resolve,reject) => {
-        buildingModel.update(id,entityData).then((data)=>{
+        buildingModel.update(id,bldgInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -35,7 +35,7 @@ function updatebuilding(id,userData,callback) {
 
 }
 
-function removebuilding(id) {
+function removeBuilding(id) {
     return new Promise((resolve,reject) => {
         buildingModel.remove(id).then((data)=>{
             resolve(data);

@@ -1,93 +1,62 @@
-const db = require('../config/database');
+var db = require('../config/database');
 const dbConn = require('../config/db-function');
 const msql=dbConn.msql;
+const format=dbConn.formatSQL;
+
+const tableName="bm_venues";
 
 var venueModel = {
-   getList:getList,
-   add:add,
-   update:update,
-   remove:remove,
-   getById:getById
+    getList:getList,
+    add:add,
+    update:update,
+    remove:remove,
+    getById:getById
 }
 
-function getList() {
-    return new Promise((resolve,reject) => {
-
-          const sql=  msql()
-            .insert( 'bm_venues', [
-            { username: 'test', password: "123'4", first_name: 'me' },
-            { username: 'example', password: 'abcd', first_name: "pasta" }
-            ] )
-            .sql();
-
-
-        db.query(`SELECT * from bm_venues where is_active=1`,(error,rows,fields)=>{
-            if(!!error) {
-
-                reject(error);
-            } else {
-
-                resolve(rows[0]);
-            }
-       });
-    });
+async function getList (params) {
+    const sql= msql()
+    .select( "v.*", tableName + ' v' )
+    .where({'v.is_active':1})
+    .sql();
+    return  db.query(format(sql));
 }
 
-function getById(id) {
-    return new Promise((resolve,reject) => {
-        db.query("SELECT * FROM bm_venues WHERE id ="+id.id,(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+async function getById(params) {
+     const sql= msql()
+    .select( "v.*", tableName + ' v' )
+    .where({'v.id':params.venue_id})
+    .sql();
+    console.log(params);
+    return  db.query(format(sql));
 }
 
-function add(user) {
-     return new Promise((resolve,reject) => {
-         db.query("INSERT INTO bm_venues(title,description)VALUES('"+user.name+"','"+user.age+"','"+user.state+"','"+user.country+"')",(error,rows,fields)=>{
-            if(error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-          });
-        });
+async function add(venueInfo) {
+    const sql=  msql()
+    .insert( tableName, [venueInfo] )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
 }
 
 
-function update(id,user) {
-    return new Promise((resolve,reject) => {
-        db.query("UPDATE test set name='"+user.name+"',age='"+user.age+"',state='"+user.state+"',country='"+user.country+"' WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    })
+async function update(id,venueInfo) {
+    const sql=  msql()
+    .update( tableName, venueInfo )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
+
 }
 
-function remove(id) {
-   return new Promise((resolve,reject) => {
-        db.query("DELETE FROM test WHERE id='"+id+"'",(error,rows,fields)=>{
-            if(!!error) {
-                dbConn.connectionRelease;
-                reject(error);
-            } else {
-                dbConn.connectionRelease;
-                resolve(rows);
-            }
-       });
-    });
+async  function remove(id) {
+    const sql=  msql()
+    .delete( tableName )
+    .where( {id: id} )
+    .sql();
+    console.log(format(sql));
+    return  db.query(format(sql));
+
 }
 
 

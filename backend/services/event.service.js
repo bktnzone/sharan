@@ -42,9 +42,9 @@ function removeEvent(id) {
     })
 }
 
-function getList() {
+function getList(params) {
     return new Promise((resolve,reject) => {
-        eventModel.getList().then((data)=>{
+        eventModel.getList(params).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -55,7 +55,7 @@ function getList() {
 function getById(id) {
     return new Promise((resolve,reject) => {
         eventModel.getById(id).then((data)=>{
-            resolve(data);
+            resolve(data[0]);
         }).catch((err) => {
             reject(err);
         })

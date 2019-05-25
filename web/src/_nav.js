@@ -4,10 +4,10 @@ export default {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
+     // badge: {
+      //  variant: 'info',
+       // text: 'NEW',
+     // },
     },
 
     {
@@ -30,7 +30,7 @@ export default {
     }
     ,
     {
-      name: 'Food Requests',
+      name: 'Yathra Food',
       url: '/food-requests',
       icon: 'icon-puzzle'
     },

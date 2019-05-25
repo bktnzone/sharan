@@ -5,7 +5,7 @@ var errorCode = require('../../common/error-code');
 var errorMessage = require('../../common/error-methods');
 
 module.exports = {
-   getAllUsers :async (req,res,next)=> {
+   getList :async (req,res,next)=> {
         try {
             const result=await userService.getAllUser();
             req.data=result;

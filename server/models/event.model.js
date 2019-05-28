@@ -14,7 +14,7 @@ var regModel = {
 async function getList (params) {
     const sql= msql()
     .select( "E.*", 'bm_events E' )
-    .ljoin( "bm_venues V", "v.id = E.venue_id" )
+    .ljoin( "bm_venues V", "V.id = E.venue_id" )
     .where({'E.venue_id':params.venue_id})
     .sql();
     return  db.query(format(sql));

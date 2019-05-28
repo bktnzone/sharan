@@ -1,16 +1,11 @@
 {
-  "name": "@coreui/coreui-free-react-admin-template",
-  "version": "2.1.7",
-  "description": "CoreUI React Open Source Bootstrap 4 Admin Template",
-  "author": "Łukasz Holeczek",
-  "homepage": "https://coreui.io",
+  "name": "hv-sharnam",
+  "version": "1.0.0",
+  "description": "Event Management System",
+ "author":"Nirmal",
   "copyright": "Copyright 2019. Brahma Kumaris Chennai",
   "license": "MIT",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
-  },
   "dependencies": {
     "@coreui/coreui": "^2.1.9",
     "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.3.0",
@@ -53,15 +48,14 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "rbuild": "run-s build copy-fe",
+    "rbuild":"npm run build && npm run move-build-to-server",
+    "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public",
+    "rbuild1": "run-s build copy-fe",
     "copy-fe": "rm -r ../server/public/* && cp -r ./build/* ../server/public/",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject"
-  },
-  "bugs": {
-    "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
   },
   "eslintConfig": {
     "extends": "react-app"

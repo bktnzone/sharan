@@ -1,25 +1,18 @@
 FROM node:8.9.1-alpine
 
-RUN mkdir -p /usr/src/app/server
-
+# Create app directory
 WORKDIR /usr/src/app
-ADD ./web ./web
-ADD ./server ./server
 
-RUN cd web && \
-    yarn install && \
-    npm run build && \
-    cd .. &&\
-    \
-    cd server && \
-    npm install && \
-    npm run build && \
-    npm prune --production && \
-    \
-    rm -rf ../web
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-WORKDIR /usr/src/app/server
+RUN npm install --only=production
+# If you are building your code for production
+# RUN npm ci --only=production
+
+# Bundle app source
+COPY . .
 
 CMD [ "npm", "start" ]
-
-EXPOSE 3000

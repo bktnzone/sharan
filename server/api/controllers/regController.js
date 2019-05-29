@@ -16,18 +16,22 @@ module.exports = {
       const regInfo = req.body;
       console.log(req.body);
       const result = await regSVC.add(regInfo);
-      req.data = {result:"added"};
+      let actualData = await regSVC.getById({ reg_id:result.insertId});
+      req.data = {...actualData};
+      return next();
     } catch (err) {
       req.err = err;
+      return next(err);
     }
-    return next();
+
   },
 
   update: async (req, res, next) => {
     try {
-      const regInfo = req.body;
+      const { createdAt,updatedAt, description,title,  ...regInfo} = req.body;
       const result = await regSVC.update(req.params.id,regInfo);
-      req.data = { items: result };
+      let actualData = await regSVC.getById({ reg_id:req.params.id});
+      req.data = {...actualData};
     } catch (err) {
       req.err = err;
     }

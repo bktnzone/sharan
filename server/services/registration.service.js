@@ -22,8 +22,13 @@ function getList(params) {
 
 async function addReg(params) {
     return new Promise(async (resolve,reject) => {
+        try{
        const inserted=await regModel.add(params);
-       resolve(inserted);
+        resolve(inserted);
+        }catch(ex){
+            reject(ex);
+        }
+
 });
 }
 

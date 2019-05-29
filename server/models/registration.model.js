@@ -15,7 +15,7 @@ async function getList (params) {
     const sql= msql()
     .select( "r.*,e.title,e.description", 'bm_registrations r' )
     .ljoin( "bm_events e", "e.id = r.event_id" )
-    .where({'r.event_id':params.event_id})
+    .where({'r.event_id':params.event_id,'r.is_active':1})
     .sql();
     return  db.query(format(sql));
 }
@@ -32,6 +32,7 @@ async function getById(params) {
 }
 
 async function add(regInfo) {
+    regInfo.is_active=1;
     const sql=  msql()
     .insert( 'bm_registrations', [regInfo] )
     .sql();
@@ -41,6 +42,8 @@ async function add(regInfo) {
 
 
 async function update(id,regInfo) {
+    if(!(regInfo.is_active===0))
+            regInfo.is_active=1;
     const sql=  msql()
     .update( "bm_registrations", regInfo )
     .where( {id: id} )

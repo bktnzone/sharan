@@ -2,7 +2,7 @@
   "name": "hv-sharnam",
   "version": "1.0.0",
   "description": "Event Management System",
- "author":"Nirmal",
+  "author": "Nirmal",
   "copyright": "Copyright 2019. Brahma Kumaris Chennai",
   "license": "MIT",
   "private": true,
@@ -32,6 +32,7 @@
     "react-bootstrap-table2-paginator": "^2.0.6",
     "react-bootstrap-table2-toolkit": "^1.4.2",
     "react-chartjs-2": "^2.7.6",
+    "react-datasheet": "^1.3.14",
     "react-dom": "^16.8.6",
     "react-router-config": "^4.4.0-beta.8",
     "react-router-dom": "~4.3.1",
@@ -39,7 +40,8 @@
     "react-test-renderer": "^16.8.6",
     "reactstrap": "^7.1.0",
     "reactstrap-confirm": "^1.0.4",
-    "simple-line-icons": "^2.4.1"
+    "simple-line-icons": "^2.4.1",
+    "toasted-notes": "^2.1.5"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.3",
@@ -48,9 +50,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "rbuild":"npm run build && npm run move-build-to-server",
+    "rbuild1": "npm run build && npm run move-build-to-server",
     "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public",
-    "rbuild1": "run-s build copy-fe",
+    "rbuild": "run-s build copy-fe",
     "copy-fe": "rm -r ../server/public/* && cp -r ./build/* ../server/public/",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
@@ -73,5 +75,6 @@
       "!src/serviceWorker.js",
       "!src/polyfill.js"
     ]
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

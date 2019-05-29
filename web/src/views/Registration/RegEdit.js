@@ -15,19 +15,21 @@ import {
   CardHeader,
   Col,
   Row,
+  Alert,
   Table
 } from "reactstrap";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-
+import toast from 'toasted-notes'
+import 'toasted-notes/src/styles.css';
 import Select from "react-select";
 import { apiServices as apiSvc } from "../../api-svc";
 import { AppSwitch } from "@coreui/react";
 
 const studentTypes = [
-  { value: 1, label: "Kumar" },
-  { value: 2, label: "O.Kumar" },
-  { value: 3, label: "Kanya" },
-  { value: 4, label: "Matha" }
+  { value: "Kumar", label: "Kumar" },
+  { value: "OKumar", label: "OKumar" },
+  { value: "Kanya", label: "Kumari" },
+  { value: "Matha", label: "Matha" }
 ];
 
 const pageButtonRenderer = ({
@@ -61,6 +63,7 @@ class RegEdit extends Component {
   state = {
     pageMode: 0,
     eventInfo: {},
+
     regData: { amt_paid: false }
   };
 
@@ -72,13 +75,12 @@ class RegEdit extends Component {
 
     if (params.event_id) regData.event_id = params.event_id;
 
-    if(regData.id>0){
-      let regInfoData=await regSvc.getInfo({ id: regData.id });
-      params.event_id=regInfoData.data.event_id;
+    if (regData.id > 0) {
+      let regInfoData = await regSvc.getInfo({ id: regData.id });
+      params.event_id = regInfoData.data.event_id;
 
       this.setState({ regData: regInfoData.data });
     }
-
 
     eventSvc.getInfo({ id: params.event_id }).then(r => {
       this.setState({ eventInfo: r.data });
@@ -89,32 +91,46 @@ class RegEdit extends Component {
   handleSwitch = e => {
     const { regData } = this.state;
     regData[e.target.name] = e.target.checked;
+    this.setState({regData:regData});
+  };
+
+  handleCategoryChange=(selectedOption)=>{
+    const { regData } = this.state;
+    regData.category = selectedOption.value;
+    this.setState({regData:regData});
+  }
+
+  handleInputChange = event => {
+    const target = event.target;
+    const value =
+      target.type === "checkbox" || target.type === "radio"
+        ? target.checked
+        : target.value;
+    const name = target.name;
+
+    let regDataNew = { ...this.state.regData, [name]: target.value };
+    //regDataNew[name]=target.value;
+    this.setState({ regData: regDataNew });
   };
 
 
-  handleInputChange=(event)=> {
-    const target = event.target;
-    const value = target.type === 'checkbox' || target.type ==='radio' ? target.checked : target.value;
-    const name = target.name;
-
-    let regDataNew={...this.state.regData,[name]:target.value};
-    //regDataNew[name]=target.value;
-    this.setState({regData:regDataNew});
-  }
-
-  handleChange=(item)=>{
-    console.log(item);
-   this.setState({selectedEvent:item})
-  }
 
   handleSubmit = event => {
     const { regData } = this.state;
     event.preventDefault();
     const formData = new FormData(event.target);
     for (var key of formData.keys()) {
-      regData[key] = formData.get(key);
+      if(key!="amt_paid" && key!="is_departed" && key!="is_arrived")
+        regData[key] = formData.get(key);
     }
-    regSvc.save(regData).then(r => {});
+
+
+    regSvc.save(regData).then(r => {
+      const saveState=regData.id?"updated":"added";
+      toast.notify('Record ' + saveState + ' successfully.');
+      this.setState({showMessage:true});
+
+    });
 
     console.log(regData);
   };
@@ -127,13 +143,17 @@ class RegEdit extends Component {
         <Row>
           <Col xs="12" md="12">
             <Card>
-              <CardHeader><h5>{eventInfo.title}</h5></CardHeader>
+              <CardHeader>
+                <h5>{eventInfo.title}</h5>
+              </CardHeader>
             </Card>
           </Col>
         </Row>
         <Row>
           <Col xs="12" md="12">
             <Form onSubmit={this.handleSubmit}>
+
+
               <Card>
                 <CardHeader>
                   {pageMode === 1 && (
@@ -163,181 +183,143 @@ class RegEdit extends Component {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="reg_name">Name</Label>{" "}
+                <FormGroup row>
+                  <Col xs="4">
+                      <FormGroup>
+                        <Label htmlFor="fullname">Name</Label>
+                        <Input
+                          type="text"
+                          id="fullname"
+                          name="fullname"
+                          placeholder="enter fullname "
+                          defaultValue={regData.fullname}
+                          onChange={this.handleInputChange}
+                        />
+                      </FormGroup>
                     </Col>
-                    <Col xs="12" md="9">
 
-                      <Input defaultValue={regData.fullname}
-                        type="text"
-                        id="reg_name"
-                        name="reg_name"
-                        placeholder="enter full name of the registrant"
-                        onChange={this.handleInputChange}
-                      />{" "}
+                    <Col xs="4">
+                      <FormGroup>
+                        <Label htmlFor="centre">Centre</Label>
+                        <Input
+                          type="text"
+                          id="centre"
+                          name="centre"
+                          placeholder="enter centre name "
+                          defaultValue={regData.centre}
+                          onChange={this.handleInputChange}
+                        />
+                      </FormGroup>
                     </Col>
-                  </FormGroup>
+                   </FormGroup>
 
                   <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="reg_age">Age</Label>{" "}
-                    </Col>
-                    <Col xs="12" md="9">
-                      {" "}
-                      <Input defaultValue={regData.age}
-                        type="number"
-                        id="reg_age"
-                        name="reg_age"
-                        placeholder="enter age"
-                      />{" "}
-                    </Col>
-                  </FormGroup>
 
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label>Gender</Label>
-                    </Col>
-                    <Col md="9">
-                      {
-                        JSON.stringify(this.state)
-                      }
-                      <FormGroup  inline>
+                      <Col xs="4">
+
+                      <Label >Gender:</Label>{" "}
+                      </Col>
+                      <Col xs="2">
+
                         <Input
                           className="form-check-input"
                           type="radio"
                           id="reg_genderm"
                           name="gender"
                           value="M"
-                          checked={this.state.regData.gender === 'M'}
+                          checked={this.state.regData.gender === "M"}
                           onChange={this.handleInputChange}
                         />
                         <Label
                           className="form-check-label"
-
                           htmlFor="reg_genderm"
                         >
                           Male
                         </Label>
-                      </FormGroup>
-                      <FormGroup  inline>
-
+                        </Col>
+                        <Col xs="2">
                         <Input
                           className="form-check-input"
                           type="radio"
                           id="reg_genderf"
                           name="gender"
                           value="F"
-                          checked={this.state.regData.gender === 'F'}
+                          checked={this.state.regData.gender === "F"}
                           onChange={this.handleInputChange}
                         />
                         <Label
                           className="form-check-label"
-
                           htmlFor="reg_genderf"
                         >
                           Female
                         </Label>
-                      </FormGroup>
+
+
                     </Col>
+
                   </FormGroup>
+
+                  <FormGroup row>
+                  <Col xs="4">
+                  <Label htmlFor="age">Lokik Age</Label>
+                        <Input
+                        value={regData.age || ''}
+                        type="number"
+                        id="reg_age"
+                        name="age"
+                        placeholder="enter lokik age"
+                        onChange={this.handleInputChange}
+                      />{" "}
+                      </Col>
+                  <Col xs="4">
+                      <Label htmlFor="reg_age">Years in Gyan</Label>{" "}
+                      <Input
+                        value={regData.gyan_age || ''}
+                        onChange={this.handleInputChange}
+                        type="text"
+                        id="gyan_age"
+                        name="gyan_age"
+                        placeholder="enter years in gyan"
+                      />{" "}
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row><Col xs="6">
+                    <Label htmlFor="reg_name">Mobile No</Label>{" "}
+                    <Input
+                        defaultValue={regData.mobile_no}
+                        value={regData.mobile_no || ''}
+                        type="text"
+                        id="reg_mobile_no"
+                        name="mobile_no"
+                        placeholder="enter mobile number"
+                        onChange={this.handleInputChange}
+                      />{" "}
+                    </Col>
+                    </FormGroup>
+
 
 
                   <FormGroup row>
                     <Col md="3">
                       <Label>Category</Label>
                     </Col>
-                    <Col md="9">
-                      <FormGroup check inline>
-                        <Input
-                          className="form-check-input"
-                          type="radio"
-                          id="reg-is-member1"
-                          name="reg_member_type"
-                          value="1"
-                          checked={this.state.regData.gender === 'M'}
-                          onChange={this.handleInputChange}
-                        />
-                        <Label
-                          className="form-check-label"
-                          check
-                          htmlFor="reg-is-member1"
-                        >
-                          BK Surrendered
-                        </Label>
-                      </FormGroup>
-                      <FormGroup check inline>
-                        <Input
-                          className="form-check-input"
-                          type="radio"
-                          id="reg-is-member0"
-                          name="reg_member_type"
-                          value="0"
-                        />
-                        <Label
-                          className="form-check-label"
-                          check
-                          htmlFor="reg-is-member0"
-                        >
-                          BK Student
-                        </Label>
-                      </FormGroup>
-                      <FormGroup check inline>
-                        <Input
-                          className="form-check-input"
-                          type="radio"
-                          id="reg-is-member2"
-                          name="reg_member_type"
-                          value="2"
-                        />
-                        <Label
-                          className="form-check-label"
-                          check
-                          htmlFor="reg-is-member2"
-                        >
-                          Contact Soul
-                        </Label>
-                      </FormGroup>
-                      <FormGroup check inline>
-                        <Input
-                          className="form-check-input"
-                          type="radio"
-                          id="reg-is-member3"
-                          name="reg_member_type"
-                          value="3"
-                        />
-                        <Label
-                          className="form-check-label"
-                          check
-                          htmlFor="reg-is-member3"
-                        >
-                          Non-BK
-                        </Label>
-                      </FormGroup>
+
+                    <Col xs="12" md="9" style={{"zIndex":"99999"}}>
+                      <Select
+                        name="category"
+                        id="category"
+                        isClearable
+                        isSearchable
+                        value={studentTypes.filter(option => option.label === regData.category)}
+                        onChange={this.handleCategoryChange}
+                        options={studentTypes}
+
+                        placeholder="Select Category"
+                        isSearchable={true}
+                      />
                     </Col>
                   </FormGroup>
-
-
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label>Sub-Category</Label>
-                    </Col>
-
-                    <Col xs="12" md="9">
-                        <Select
-                          name="reg_student_type"
-                          isClearable
-                          isSearchable
-                          options={studentTypes}
-                          onChange={this.handleChange}
-                          placeholder="Select Type"
-                          isSearchable={true}
-                        />
-
-                    </Col>
-                  </FormGroup>
-
-
 
                   <FormGroup row>
                     <Col md="3">
@@ -346,40 +328,16 @@ class RegEdit extends Component {
                     <Col xs="12" md="9">
                       <Input
                         type="email"
-                        id="reg_email"
-                        name="reg_email"
+                        id="email_id"
+                        name="email_id"
+                        defaultValue={regData.email_id}
                         placeholder="enter email"
                         autoComplete="email"
                       />
                     </Col>
                   </FormGroup>
 
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="arrival_date">Arriving on</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="date"
-                        id="arrival_date"
-                        name="arrival_date"
-                        placeholder="arrival date"
-                      />
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col md="3">
-                      <Label htmlFor="depart_date">Departing on</Label>
-                    </Col>
-                    <Col xs="12" md="9">
-                      <Input
-                        type="date"
-                        id="depart_date"
-                        name="depart_date"
-                        placeholder="depart date"
-                      />
-                    </Col>
-                  </FormGroup>
+
 
                   <FormGroup row>
                     <Col md="3">
@@ -411,8 +369,8 @@ class RegEdit extends Component {
                       </FormGroup>
                       <FormGroup>
                         <AppSwitch
-                          id="arrived"
-                          name="arrived"
+                          id="is_arrived"
+                          name="is_arrived"
                           checked={regData.is_arrived}
                           onChange={this.handleSwitch}
                           size="sm"
@@ -427,7 +385,7 @@ class RegEdit extends Component {
                         <Label
                           className="form-check-label"
                           check
-                          htmlFor="arrived"
+                          htmlFor="is_arrived"
                         >
                           Arrived ?
                         </Label>
@@ -435,8 +393,8 @@ class RegEdit extends Component {
 
                       <FormGroup>
                         <AppSwitch
-                          id="departed"
-                          name="departed"
+                          id="is_departed"
+                          name="is_departed"
                           checked={regData.is_departed}
                           onChange={this.handleSwitch}
                           size="sm"
@@ -466,10 +424,13 @@ class RegEdit extends Component {
                     <Col xs="12" md="9">
                       <Input
                         type="textarea"
-                        name="reg_remarks"
+                        value={regData.remarks}
+
+                        name="remarks"
                         id="reg_remarks"
                         rows="3"
                         placeholder="Remarks..."
+                        onChange={this.handleInputChange}
                       />
                     </Col>
                   </FormGroup>

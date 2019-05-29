@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 
-/src/pages
+/src/pages1
 
 # testing
 /coverage

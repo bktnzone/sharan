@@ -4,7 +4,7 @@ const RES_BASE_NAME="/regs";
 
 
 function getList(params) {
-  const resource=`${RES_BASE_NAME}/?event_id=1`;
+  const resource=`${RES_BASE_NAME}/?event_id=${params.event_id}`;
   return api.get(resource).then(res => res.data)
 }
 
@@ -13,12 +13,19 @@ function getInfo(params) {
   return api.get(resource).then(res => res.data)
 }
 
+
+function patch(params) {
+  const resource=`${RES_BASE_NAME}/${params.id}`;
+  return api.put(resource,params).then(res => res.data);
+
+}
+
 function save(params) {
   const resource=`${RES_BASE_NAME}/${params.id}`;
   if(params.id>0)
-    return api.put(resource).then(res => res.data);
+    return api.put(resource,params).then(res => res.data);
   else
-    return api.post(`${RES_BASE_NAME}`).then(res => res.data)
+    return api.post(`${RES_BASE_NAME}`,params).then(res => res.data)
 }
 
 function remove(params) {
@@ -31,4 +38,4 @@ function apply(params) {
   return api.post(resource).then(res => res.data)
 }
 
-export  { getInfo,getList,save,remove,apply};
+export  { getInfo,getList,save,remove,apply,patch};

@@ -14,7 +14,7 @@ const handleSuccess = (req, res, next) => {
   }
 };
 
-//router.use('/auth', routers.authRoute);
+router.use('/auth', routers.authRoute);
 router.get("/health-check", (req, res) => res.send("OK"));
 
 //router.use("/users", routers.regRoute);

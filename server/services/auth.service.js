@@ -11,14 +11,14 @@ function authentic(authenticData) {
         authenticModel.authentic(authenticData).then((data)=>{
             resolve(data);
         }).catch((err) => {
-            reject(err);
+            resolve({has_error:true,error:err});
         })
     })
-   
+
 }
 
 function signup(signUpData) {
-    
+
     return new Promise((resolve,reject) => {
         authenticModel.signup(signUpData).then((data)=>{
             resolve(data);
@@ -26,7 +26,7 @@ function signup(signUpData) {
             reject(err);
         })
     })
-   
+
 }
 
 

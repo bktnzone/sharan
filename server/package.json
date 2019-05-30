@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --setupFiles dotenv/config --watch",
     "start": "node app.js",
-    "local": "nodemon -r dotenv/config app.js",
+    "local": "nodemon -r dotenv/config app.js dotenv_config_path=/projects/freelancing/bk-projects/bk-event-mgr/server/.env.prod",
     "debug": "nodemon -r dotenv/config --inspect=9229 app.js"
   },
   "dependencies": {

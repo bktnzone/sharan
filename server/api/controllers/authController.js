@@ -16,7 +16,7 @@ module.exports = {
         authService.authentic(authenticData).then((data) => {
             if(data.email_id) {
                var emailId = data.email_id;
-               const token = jwt.sign({emailId},'my_secret_key',{ expiresIn: 60*60*24 });
+               const token = jwt.sign({emailId},process.env.JWT_SECRET,{ expiresIn: 60*60*24 });
                req.data={
                  "success":true,
                 // "data":data,

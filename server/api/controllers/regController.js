@@ -3,6 +3,7 @@ const regSVC = require("../../services/registration.service");
 module.exports = {
   getList: async (req, res, next) => {
     try {
+      console.log(req.user);
       const result = await regSVC.getList({ event_id: req.query.event_id });
       req.data = { items: result };
     } catch (err) {

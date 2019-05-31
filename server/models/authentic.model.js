@@ -1,6 +1,6 @@
 var db = require('../config/database');
 const dbConn = require('../config/db-function');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const userModel=require('./user.model');
 
 
@@ -10,8 +10,11 @@ const authenticate =async (authenticData)=> {
     return new Promise(async (resolve,reject)=>{
 
         const resp=await userModel.getByEmail({email_id:authenticData.email});
-
-        bcrypt.compare(authenticData.password, resp[0].password, function (err, isMatch) {
+        //if(resp.length>0)
+           // resolve(resp[0]);
+        //else
+           // reject({"success":false,"message":"password does not match"});
+         bcrypt.compare(authenticData.password, resp[0].password, function (err, isMatch) {
             if (err) {
                 reject(error);
             } else if (isMatch) {

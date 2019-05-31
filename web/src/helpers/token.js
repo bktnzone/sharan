@@ -1,6 +1,6 @@
 // For storing the logged in user's credentails across page refreshes
 import decodeJWT from 'jwt-decode'
-const key = 'userToken'
+const key = 'bksharan-token'
 
 export function rememberToken(token) {
   if (token) {
@@ -12,7 +12,6 @@ export function rememberToken(token) {
     localStorage.removeItem(key)
   }
 }
-
 
 export function getValidToken() {
   const token = localStorage.getItem(key)
@@ -33,7 +32,6 @@ export function getValidToken() {
 }
 
 export function getDecodedToken() {
-  debugger;
   const validToken = getValidToken()
   if (validToken) {
     return decodeJWT(validToken)

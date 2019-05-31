@@ -1,7 +1,7 @@
 import React from 'react';
-import BaseRoutes from './routes.base';
+//import BaseRoutes from './routes.base';
 
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Dashboard = React.lazy(() => import('./views/Dashboard'));
 const VenueList = React.lazy(() => import('./views/Venue/VenueList'));
 const VenueEdit = React.lazy(() => import('./views/Venue/VenueEdit'));
 
@@ -58,5 +58,5 @@ const routes = [
 ];
 
 
-//export default  routes;
-export default BaseRoutes.concat(routes);
+export default  routes;
+//export default BaseRoutes.concat(routes);

@@ -20,6 +20,6 @@ export function setToken(token) {
 }
 
 // Validates token, and removes it if it's invalid
-setToken(getValidToken())
+//setToken(getValidToken())
 
 export default api

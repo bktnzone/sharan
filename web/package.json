@@ -53,7 +53,7 @@
     "build": "react-scripts build",
     "rbuild1": "npm run build && npm run move-build-to-server",
     "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public",
-    "rbuild": "run-s build copy-fe",
+    "rbuild": "run-s build copy-fe ",
     "copy-fe": "rm -r ../server/public/* && cp -r ./build/* ../server/public/",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",

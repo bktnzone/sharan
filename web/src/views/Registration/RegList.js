@@ -103,6 +103,7 @@ class RegList extends Component {
   };
 
   handleSwitch = async (e, rowInfo) => {
+
     await this.applyPatch(rowInfo.id, { [e.target.name]: e.target.checked });
   };
 
@@ -130,7 +131,7 @@ class RegList extends Component {
   };
 
   getEvents = async () => {
-    eventSvc.getList().then(r => {
+    eventSvc.getList({venue_id:1}).then(r => {
       const events = r.data.items.map(e => {
         return { label: e.title, value: e.id };
       });

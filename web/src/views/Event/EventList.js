@@ -43,7 +43,19 @@ const columns = [
   },
   {
     dataField: "description",
-    text: "Age",
+    text: "Description",
+    searchable: false,
+    sort: true
+  },
+  {
+    dataField: "start_date",
+    text: "Start Date",
+    searchable: false,
+    sort: true
+  },
+  {
+    dataField: "end_date",
+    text: "End Date",
     searchable: false,
     sort: true
   }
@@ -95,7 +107,7 @@ class EventList extends Component {
 
   componentDidMount=async ()=> {
     await this.getVenues();
-    this.load();
+
   }
 
   getVenues=async ()=>{
@@ -136,31 +148,24 @@ class EventList extends Component {
     console.log(this.state.selected);
     let result = await confirm(Util.defaultDeleteOption); //will display a confirmation dialog with default settings
 
-console.log(result);
+    console.log(result);
 
-   /* if (!this.state.selected.includes(2)) {
-      this.setState(() => ({
-        selected: [...this.state.selected, 2]
-      }));
-    } else {
-      this.setState(() => ({
-        selected: this.state.selected.filter(x => x !== 2)
-      }));
-    }*/
+
   }
 
   handleChange=(item)=>{
-    console.log(item);
-   this.setState({selectedVenue:item})
+
+   this.setState({selectedVenue:item},()=>this.load());
+
   }
 
   load() {
     // display loading page
     this.setState({ loading: true });
     // load all of the rooms from the database
-    regSvc.getList()
-      .then(regs => {
-        this.setState({ eventDataList: regs.data.items });
+    eventSvc.getList({venue_id:this.state.selectedVenue.value})
+      .then(resp => {
+        this.setState({ eventDataList: resp.data.items });
 
         // toggle loading page off
         this.setState({ loading: false });

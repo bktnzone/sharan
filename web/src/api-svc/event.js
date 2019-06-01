@@ -4,7 +4,8 @@ const RES_BASE_NAME="/events";
 
 
 function getList(params) {
-  const resource=`${RES_BASE_NAME}/?venue_id=1`;
+
+  const resource=`${RES_BASE_NAME}/?venue_id=${params.venue_id}`    ;
   return api.get(resource).then(res => res.data)
 }
 

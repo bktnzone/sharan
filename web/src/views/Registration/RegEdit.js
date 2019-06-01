@@ -350,7 +350,7 @@ class RegEdit extends Component {
                       <Label>Other Status</Label>
                     </Col>
                     <Col md="9">
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="amt_paid"
                           name="amt_paid"
@@ -373,7 +373,7 @@ class RegEdit extends Component {
                           Amt Paid ?
                         </Label>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="is_arrived"
                           name="is_arrived"
@@ -397,7 +397,7 @@ class RegEdit extends Component {
                         </Label>
                       </FormGroup>
 
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="is_departed"
                           name="is_departed"

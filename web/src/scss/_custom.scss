@@ -11,6 +11,9 @@ $body-bg: #fff;
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";
 
+.table th{
+
+}
 .table th, .table td {
   padding: 0.25rem;
   vertical-align: top;

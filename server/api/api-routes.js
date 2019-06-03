@@ -24,6 +24,6 @@ router.use("/auth", routers.authRoute);
 router.use("/buildings", routers.bldgRoute);
 router.use("/venues", routers.venueRoute);
 router.use("/food-reqs", routers.foodReqRoute);
-
+router.use("/rooms", routers.roomRoute);
 router.use(handleSuccess);
 module.exports = router;

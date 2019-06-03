@@ -2,6 +2,16 @@ const roomSvc = require("../../services/room.service");
 
 
 module.exports = {
+  getAll: async (req, res, next) => {
+    try {
+      const result = await roomSvc.getAll({venue_id:1 });
+      req.data = { items: result };
+    } catch (err) {
+      req.err = err;
+    }
+    return next();
+  },
+
   getList: async (req, res, next) => {
     try {
       const result = await roomSvc.getList({ building_id: req.query.building_id });

@@ -5,6 +5,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { apiServices as apiSvc } from "../../api-svc";
 import confirm from "reactstrap-confirm";
+import AllotmentModal from "./AllotmentModal";
 import {
   Input,
   Modal,
@@ -99,6 +100,7 @@ class RegList extends Component {
     importList: [],
     collapseReg: true,
     showImportModal: false,
+    showAllotment:false,
     isVerified:false
   };
 
@@ -232,6 +234,17 @@ class RegList extends Component {
     this.setState({ [items[ctr]]: !this.state[items[ctr]] });
   };
 
+  toggleAllotmentModal=()=>{
+    this.setState({showAllotment:false});
+  }
+
+  saveAllotment=()=>{
+    this.setState({showAllotment:false});
+  }
+  handleAllotment=()=>{
+
+    this.setState({showAllotment:true});
+  }
   handleChange = item => {
     this.setState({ loading: true });
     this.setState({ selectedEvent: item }, () => {
@@ -321,7 +334,7 @@ class RegList extends Component {
         text: "Room",
         formatter: (cellContent, row) => {
           const path = "/regs/" + row.id; // + "?event_id=" + row.event_id;
-          return <Link to={path}>Allot</Link>;
+          return <Button onClick={this.handleAllotment} className="btn btn-primary" size="sm">Allot</Button>;
         }
       },
       {
@@ -390,14 +403,15 @@ class RegList extends Component {
       eventList,
       regDataList,
       isVerified,
+      showAllotment
     } = this.state;
 
-    const isSelected = () => {};
-    const selectHandler = () => {};
+
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xl={4} lg={4} className="pull-left">
+          <AllotmentModal modal={showAllotment}  saveAllotment={this.saveAllotment} toggleAllotmentModal={this.toggleAllotmentModal} />
             <Select
               styles={customControlStyles}
               value={selectedEvent}
@@ -627,6 +641,7 @@ class RegList extends Component {
               </Card>
             </Col>
           </Row>
+
         )}
       </div>
     );

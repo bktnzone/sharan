@@ -30,7 +30,8 @@ app.use(bodyParser.json());
 //set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api',jwt());
+if(process.env.NODE_ENV!="development")
+  app.use('/api',jwt());
 app.use('/api',apiRoutes);
 
 //app.use('/api',apiRoutes);

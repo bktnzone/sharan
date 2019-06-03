@@ -31,7 +31,7 @@ export default {
     ,
     {
       name: 'Yathra Food',
-      url: '/food-requests',
+      url: '#',
       icon: 'icon-puzzle'
     },
     {

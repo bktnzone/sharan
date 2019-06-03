@@ -3,6 +3,7 @@ var roomModel = require("../models/room.model.js");
 
 var roomService = {
     getList: getList,
+    getAll:getAll,
     getById:getById,
     add: addRoom,
     update:updateRoom,
@@ -14,7 +15,7 @@ var roomService = {
 
 function addRoom(roomInfo) {
     return new Promise((resolve,reject) => {
-        roomModel.add(roomInfo).then((data)=>{
+        roomModel.getList(roomInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -26,7 +27,7 @@ function addRoom(roomInfo) {
 
 function updateRoom(id,roomInfo) {
     return new Promise((resolve,reject) => {
-        roomModel.update(id,roomInfo).then((data)=>{
+        roomModel.getList(id,roomInfo).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -37,12 +38,23 @@ function updateRoom(id,roomInfo) {
 
 function removeRoom(id) {
     return new Promise((resolve,reject) => {
-        roomModel.remove(id).then((data)=>{
+        roomModel.getList(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
         })
     })
+}
+
+
+function getAll() {
+    return new Promise((resolve,reject) => {
+        roomModel.getAll().then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
 }
 
 function getList() {
@@ -57,7 +69,7 @@ function getList() {
 
 function getById(id) {
     return new Promise((resolve,reject) => {
-        roomModel.getById(id).then((data)=>{
+        roomModel.getList(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

@@ -12,6 +12,7 @@
     "@coreui/icons": "0.3.0",
     "@coreui/react": "~2.1.7",
     "axios": "^0.18.0",
+    "bindings": "^1.5.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "classnames": "^2.2.6",
@@ -21,6 +22,7 @@
     "font-awesome": "^4.7.0",
     "jwt-decode": "^2.2.0",
     "lodash.defaults": "^4.2.0",
+    "lodash.uniqby": "^4.7.0",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
@@ -52,7 +54,7 @@
     "build": "react-scripts build",
     "rbuild1": "npm run build && npm run move-build-to-server",
     "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public",
-    "rbuild": "run-s build copy-fe",
+    "rbuild": "run-s build copy-fe ",
     "copy-fe": "rm -r ../server/public/* && cp -r ./build/* ../server/public/",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
@@ -76,5 +78,6 @@
       "!src/polyfill.js"
     ]
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:4000",
+  "proxy1": "https://sharnam.gyanmoti.in"
 }

@@ -1,9 +1,14 @@
 import api from './init'
 
-const RES_BASE_NAME="/allotments";
+const RES_BASE_NAME="/rooms";
+
+function getAllRooms(params) {
+  const resource=`${RES_BASE_NAME}/?venue_id=1`;
+  return api.get(resource).then(res => res.data)
+}
 
 function getList(params) {
-  const resource=`${RES_BASE_NAME}/?event_id=1`;
+  const resource=`${RES_BASE_NAME}/?venue_id=1`;
   return api.get(resource).then(res => res.data)
 }
 
@@ -30,4 +35,4 @@ function apply(params) {
   return api.post(resource).then(res => res.data)
 }
 
-export  { getInfo,getList,save,remove,apply};
+export  { getAllRooms,getInfo,getList,save,remove,apply};

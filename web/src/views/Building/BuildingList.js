@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import Util  from "../Shared/Util"
 import {apiServices as apiSvc} from "../../api-svc";
-import confirm from 'reactstrap-confirm';
 import {
   Button,
   CardBody,
@@ -143,7 +142,7 @@ class BuildingList extends Component {
   handleDelete =async () => {
 
     console.log(this.state.selected);
-    let result = await confirm(Util.defaultDeleteOption); //will display a confirmation dialog with default settings
+   // let result = await confirm(Util.defaultDeleteOption); //will display a confirmation dialog with default settings
 
   }
 

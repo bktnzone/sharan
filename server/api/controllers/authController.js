@@ -1,20 +1,37 @@
 const authService = require('../../services/auth.service');
-var schema = require('../../common/schema/userValidationSchema.json')
-var iValidator = require('../../common/iValidator');
-var errorCode = require('../../common/error-code');
-var errorMessage = require('../../common/error-methods');
+const jwt = require('jsonwebtoken');
+
+/*
+//Validating the input entity
+var json_format = iValidator.json_schema(schema.postSchema, authenticData, "authentic");
+if (json_format.valid == false) {
+return res.status(422).send(json_format.errorMessage);
+
+*/
 
 module.exports = {
 
-   login :async (req,res,next)=> {
+    login:(req,res,next)=>{
+        const authenticData=req.body;
+        authService.authentic(authenticData).then((data) => {
+            if(data.email_id) {
+               var emailId = data.email_id;
+               const token = jwt.sign({emailId},process.env.JWT_SECRET,{ expiresIn: 60*60*24 });
+               req.data={
+                 "success":true,
+                // "data":data,
+                 "token":token
+               };
+             }else{
+                req.data={
+                    "success":false,
+                   "error":"invalid username/password"
+                  };
 
-        try {
-           // const result=await userService.getAllUser();
-            req.data={"simple":"as"};
-            throw new Error("Failed to open File");
-        } catch (err) {
-            req.err = err;
-        }
-        return next();
-  }
+             }
+
+             return next();
+           });
+    }
+
 }

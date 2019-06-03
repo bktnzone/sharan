@@ -31,7 +31,7 @@ export default {
     ,
     {
       name: 'Yathra Food',
-      url: '/food-requests',
+      url: '#',
       icon: 'icon-puzzle'
     },
     {
@@ -59,8 +59,20 @@ export default {
       icon: 'icon-puzzle',
     },
     {
-      name: 'Reserved',
-      url: '/reserved',
+      name: 'Rooms',
+      url: '/rooms',
+      icon: 'icon-puzzle',
+    },{
+      title: true,
+      name: 'Media Manager',
+      wrapper: {
+        element: '',
+        attributes: {},
+      },
+    },
+    {
+      name: 'Media Assets',
+      url: '/media-assets',
       icon: 'icon-puzzle',
     }
   ],

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import RoomWidget  from "../../components/Room/RoomWidget";
+import Select from "react-select";
+import uniqBy from "lodash.uniqby";
 import {
   Form,
   FormGroup,
@@ -17,6 +19,7 @@ import {
   Col,
   Collapse,
   Row,
+  ButtonGroup,
   Table,ListGroup,TabPane,ListGroupItem,TabContent
 } from "reactstrap";
 
@@ -24,7 +27,7 @@ import {
 import { apiServices as apiSvc } from "../../api-svc";
 
 
-const { regSvc, eventSvc } = apiSvc;
+const { allotmentSvc,regSvc, eventSvc } = apiSvc;
 
 class Allotment extends Component {
 
@@ -35,12 +38,36 @@ class Allotment extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: 1,
+      roomMasterList:[],
+      buildingList:[],
       collapseAllot:true,
       floors:[],
       rooms:[1,2,6,4,3,2,2,2,3,2,23,23,2,],
       regList:[]
     };
   }
+
+  componentDidMount=async ()=> {
+    allotmentSvc.getAllRooms({}).then(r=>{
+        const rooms=r.data.items;
+        this.setState({roomMasterList:rooms});
+        const buildings=rooms.map(r=>{
+          return {label:r.btitle,value:r.building_id};
+        });
+        const floors=rooms.map(r=>{
+          return  {floor_no:r.floor_no};
+        });
+        this.setState({floors:this.getUniqueList(floors,"floor_no")});
+        this.setState({buildingList:this.getUniqueList(buildings,"value")});
+    });
+  }
+
+  getUniqueList=(dataItems,uniqueKey)=>{
+
+   return uniqBy(dataItems, uniqueKey);
+
+  }
+
 
   toggle(tab) {
     if (this.state.activeTab !== tab) {
@@ -51,7 +78,7 @@ class Allotment extends Component {
   }
 
   render() {
-   const { rooms } = this.state;
+   const {floors, rooms,buildingList } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -61,25 +88,37 @@ class Allotment extends Component {
         <Col xl={12} lg={12}>
               <Card>
                 <CardHeader>
-                  <i className="fa fa-bed" /> Allotments >&nbsp;
-                  <select>
-                    <option>--Select Building---</option>
-                    <option>Building 1</option>
-                    <option>Building 1</option>
-                  </select>
-                  &nbsp;
-                  <select>
-                    <option>--Select Floor---</option>
-                    <option>Floor 1</option>
-                    <option>Floor 2</option>
-                  </select>&nbsp;
+
+                <Select
+                        name="building"
+                        size="sm"
+                        id="building"
+                        isClearable
+                        isSearchable
+
+                        options={buildingList}
+
+                        placeholder="Select Building"
+                        isSearchable={true}
+                      />
+
+                 <ButtonGroup>
+                   {
+                     floors.map((f,index)=>{
+
+                      return (
+                        <Button key={index}>{f.floor_no}</Button>
+                      )
+
+                     })
+                   }
+                 </ButtonGroup>
 
                   <div className="card-header-actions">
 
                     <a className="card-header-action btn btn-minimize" data-target="#collapseAllot" onClick={()=>{ this.handleCollapse(0); }}><i className="icon-arrow-up"></i></a>
                    </div>
                 </CardHeader>
-                <Collapse isOpen={this.state.collapseAllot} id="collapseAllot">
 
                 <CardBody>
                 <Row>
@@ -161,7 +200,7 @@ return (
                   </div>
 
                 </CardBody>
-                </Collapse>
+
               </Card>
             </Col>
         </Row>

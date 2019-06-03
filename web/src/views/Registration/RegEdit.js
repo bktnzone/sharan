@@ -28,7 +28,7 @@ import { AppSwitch } from "@coreui/react";
 const studentTypes = [
   { value: "Kumar", label: "Kumar" },
   { value: "OKumar", label: "OKumar" },
-  { value: "Kanya", label: "Kumari" },
+  { value: "Kumari", label: "Kumari" },
   { value: "Matha", label: "Matha" }
 ];
 
@@ -128,7 +128,13 @@ class RegEdit extends Component {
     regSvc.save(regData).then(r => {
       const saveState=regData.id?"updated":"added";
       toast.notify('Record ' + saveState + ' successfully.');
-      this.setState({showMessage:true});
+
+      if(r.data.id)
+        regData.id = r.data.id
+      this.setState({regData:regData});
+
+      this.props.history.push('/regs/' + r.data.id);
+
 
     });
 
@@ -344,7 +350,7 @@ class RegEdit extends Component {
                       <Label>Other Status</Label>
                     </Col>
                     <Col md="9">
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="amt_paid"
                           name="amt_paid"
@@ -367,7 +373,7 @@ class RegEdit extends Component {
                           Amt Paid ?
                         </Label>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="is_arrived"
                           name="is_arrived"
@@ -391,7 +397,7 @@ class RegEdit extends Component {
                         </Label>
                       </FormGroup>
 
-                      <FormGroup>
+                      <FormGroup inline>
                         <AppSwitch
                           id="is_departed"
                           name="is_departed"

@@ -3,4 +3,6 @@ npm-debug.log
 */.env
 */build
 */node_modules
-server/public
+temp
+Dockerfile
+cloudbuild.yaml

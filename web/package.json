@@ -34,6 +34,7 @@
     "react-bootstrap-table2-paginator": "^2.0.6",
     "react-bootstrap-table2-toolkit": "^1.4.2",
     "react-chartjs-2": "^2.7.6",
+    "react-data-export": "0.4.2",
     "react-datasheet": "^1.3.14",
     "react-dom": "^16.8.6",
     "react-router-config": "^4.4.0-beta.8",

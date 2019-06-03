@@ -6,6 +6,7 @@ import { AppSwitch } from "@coreui/react";
 import { apiServices as apiSvc } from "../../api-svc";
 import confirm from "reactstrap-confirm";
 import AllotmentModal from "./AllotmentModal";
+import RegTpl  from "./RegTpl";
 import {
   Input,
   Modal,
@@ -496,6 +497,7 @@ class RegList extends Component {
                                 </FormGroup>
                                 <FormGroup row>
                                   <Col xs="12">
+                                    <RegTpl />
                                     <table border="0" cellpadding="3">
                                       <tr>
                                         <td>Centre</td>

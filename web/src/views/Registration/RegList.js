@@ -181,7 +181,8 @@ class RegList extends Component {
         age: colInfo[3] ? colInfo[3] : 0,
         category: colInfo[4] ? colInfo[4] : "-",
         gyan_age: colInfo[5] ? colInfo[5] : 0,
-        amt_paid: colInfo[6] === "Y"
+        amt_paid: colInfo[6] === "Y",
+        mobile_no: colInfo[7]?colInfo[7]:''
       };
       return regInfo;
     });
@@ -501,12 +502,13 @@ class RegList extends Component {
                                     <table border="0" cellpadding="3">
                                       <tr>
                                         <td>Centre</td>
-                                        <td>Name</td>
+                                        <td>FullName</td>
                                         <td>Gender</td>
                                         <td>Age</td>
                                         <td>Category</td>
-                                        <td>Gyan years</td>
+                                        <td>Years_Gyan</td>
                                         <td>Paid</td>
+                                        <td>MobileNo</td>
                                       </tr>
                                       <tr>
                                         <td colspan="7" />

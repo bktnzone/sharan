@@ -1,5 +1,5 @@
 import React from "react";
-import ReactExport from "react-data-export";
+import ReactExport from "../../libs/react-data-export";
 import {Button} from 'reactstrap';
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -50,12 +50,13 @@ export default class RegTpl extends React.Component {
             <ExcelFile element={<Button size="sm" color="primary">Download Excel Template</Button>}>
                 <ExcelSheet data={regDataSet} name="Registration">
                     <ExcelColumn label="Centre" value="centre"/>
-                    <ExcelColumn label="Name" value="name"/>
+                    <ExcelColumn label="FullName" value="name"/>
                     <ExcelColumn label="Gender" value="gender"/>
                     <ExcelColumn label="Age" value="age"/>
                     <ExcelColumn label="Category" value="category"/>
                     <ExcelColumn label="Gyan_Years" value="gyan_years"/>
                     <ExcelColumn label="Paid" value="amt_paid"/>
+                    <ExcelColumn label="MobileNo" value=""/>
 
                 </ExcelSheet>
                 <ExcelSheet data={optionDataSet} name="Allowed Values">

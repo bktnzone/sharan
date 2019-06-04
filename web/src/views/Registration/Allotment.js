@@ -38,14 +38,46 @@ class Allotment extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: 1,
+      activeFloor:"",
       roomMasterList:[],
       buildingList:[],
-      collapseAllot:true,
+      selectedBuildingId:0,
       floors:[],
-      rooms:[1,2,6,4,3,2,2,2,3,2,23,23,2,],
+      rooms:[],
       regList:[]
     };
   }
+
+  handleSelectBuilding=(selBuilding)=>{
+    let floors=[];
+
+
+    this.setState({selectedBuildingId:selBuilding.value});
+    if(selBuilding){
+      const rooms=this.state.roomMasterList.filter(r=>r.building_id==selBuilding.value);
+     floors=rooms.map(r=>{
+        return  {floor_no:r.floor_no};
+      });
+    }
+
+    this.setState({floors:this.getUniqueList(floors,"floor_no")});
+
+  }
+
+  handleFloorChange=(e,floor_no)=>{
+    this.loadRooms(this.state.selectedBuildingId,floor_no);
+    this.setState({activeFloor:floor_no});
+
+  }
+
+  loadRooms=(buildingId,floor_no)=>{
+    //later need to query in realtime
+    const rooms=this.state.roomMasterList.filter(r=>r.building_id==buildingId && r.floor_no==floor_no);
+
+    this.setState({rooms:rooms});
+
+  }
+
 
   componentDidMount=async ()=> {
     allotmentSvc.getAllRooms({}).then(r=>{
@@ -54,10 +86,7 @@ class Allotment extends Component {
         const buildings=rooms.map(r=>{
           return {label:r.btitle,value:r.building_id};
         });
-        const floors=rooms.map(r=>{
-          return  {floor_no:r.floor_no};
-        });
-        this.setState({floors:this.getUniqueList(floors,"floor_no")});
+
         this.setState({buildingList:this.getUniqueList(buildings,"value")});
     });
   }
@@ -78,7 +107,7 @@ class Allotment extends Component {
   }
 
   render() {
-   const {floors, rooms,buildingList } = this.state;
+   const {floors,activeFloor,rooms,buildingList } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -95,7 +124,7 @@ class Allotment extends Component {
                         id="building"
                         isClearable
                         isSearchable
-
+                        onChange={this.handleSelectBuilding}
                         options={buildingList}
 
                         placeholder="Select Building"
@@ -107,22 +136,18 @@ class Allotment extends Component {
                      floors.map((f,index)=>{
 
                       return (
-                        <Button key={index}>{f.floor_no}</Button>
+                        <Button onClick={(e)=>this.handleFloorChange(e,f.floor_no)}  color={"" + (f.floor_no===activeFloor?"primary":"secondary")} key={index}>{f.floor_no}</Button>
                       )
 
                      })
                    }
                  </ButtonGroup>
 
-                  <div className="card-header-actions">
-
-                    <a className="card-header-action btn btn-minimize" data-target="#collapseAllot" onClick={()=>{ this.handleCollapse(0); }}><i className="icon-arrow-up"></i></a>
-                   </div>
                 </CardHeader>
 
                 <CardBody>
                 <Row>
-        <Col xl={12} lg={12}>
+        <Col xl={12} lg={12} hidden>
                   <FormGroup check inline >
                         <Input className="form-check-input" type="checkbox" id="checkbox1" name="checkbox1" value="option1" />
                         <Label check className="form-check-label" htmlFor="checkbox1">Show Dormitories Only</Label>
@@ -138,26 +163,28 @@ class Allotment extends Component {
 return (
 <table className="table table-sm">
                   <tr>
-                    <td className="text-center bg-secondary" style={{"vertical-align":"middle"}}>
-                      Room 23
-                      <p>5 Cots 2 Floor Sheet</p>
+                    <td className="text-center bg-secondary" style={{"vertical-align":"top"}}>
+                     Room Name : {r.room_title}
+                    Total  <p>{r.cot_count} Cots | {r.dorm_count} Floor Sheet</p>
+                    <hr/>
+                    Available
                       </td>
                       <td>
                       <table class="table table-sm">
                         <thead><tr><th>S.No</th><th>Name</th><th>Occupied</th><th>Departing</th></tr></thead>
                         <tbody>
-                          <tr>
+                          {
+
+                        Array.from(new Array(r.cot_count), (x,i) => i).map((idx,r)=>{
+                        return (
+                          <tr key={idx}>
                         <td>1</td><td>Eustorgios Amulius</td><td>2012/03/01</td><td>Tuesday</td>
                         </tr>
-                        <tr>
-                        <td>2</td><td>Eustorgios Amulius</td><td>2012/03/01</td><td>Tuesday</td>
-                        </tr>
-                        <tr>
-                        <td>3</td><td>Eustorgios Amulius</td><td>2012/03/01</td><td>Tuesday</td>
-                        </tr>
-                        <tr>
-                        <td>4</td><td>Eustorgios Amulius</td><td>2012/03/01</td><td>Tuesday</td>
-                        </tr>
+
+                         )
+                          })
+                        }
+
                         </tbody>
                         </table>
 

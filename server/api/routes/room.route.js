@@ -3,11 +3,13 @@ const express = require('express');
 const router = express.Router();
 
 router.route('/')
-     .get(ctrl.getList)
-     .post(ctrl.add);
-router.route('/:id')
-     .get(ctrl.getById)
-     .put(ctrl.update)
+     .get(ctrl.getAll)
+router.route('/allotments')
+     .get(ctrl.getAllotments)
+     .post(ctrl.saveAllotment);
+router.route('/:id(\\d+)')
+     .get(ctrl.getAll)
+     .post(ctrl.update)
      .delete(ctrl.delete);
 
 module.exports=router;

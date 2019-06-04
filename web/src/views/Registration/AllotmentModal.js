@@ -24,10 +24,10 @@ class ImportDataModal extends React.Component {
         <Modal size="lg" isOpen={this.props.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>                  <i className="fa fa-bed" /> Allotments    </ModalHeader>
           <ModalBody>
-            <Allotment />
+            <Allotment regList={this.props.regIds}/>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.saveAllotment}>Do Something</Button>{' '}
+            <Button hidden color="primary" onClick={this.saveAllotment}>Do Something</Button>{' '}
             <Button color="secondary" onClick={this.toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>

@@ -2,6 +2,30 @@ const roomSvc = require("../../services/room.service");
 
 
 module.exports = {
+
+  saveAllotment: async (req, res, next) => {
+    try {
+      //,venue_id:req.query.venue_id
+      let body=req.body;
+      let params={venue_id:1,event_id:req.query.event_id,data:{room_id:body.room_id,reg_id:body.reg_id,is_cot:body.is_cot}};
+      const result = await roomSvc.saveAllotment(params);
+      req.data = { items: result };
+    } catch (err) {
+      req.err = err;
+    }
+    return next();
+  },
+
+  getAllotments: async (req, res, next) => {
+    try {
+      let params=req.query;
+      const result = await roomSvc.getAllotments(params);
+      req.data = { items: result,query:params };
+    } catch (err) {
+      req.err = err;
+    }
+    return next();
+  },
   getAll: async (req, res, next) => {
     try {
       const result = await roomSvc.getAll({venue_id:1 });

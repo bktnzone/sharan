@@ -1,6 +1,29 @@
-import api from './init'
+import  api from './init'
+
 
 const RES_BASE_NAME="/rooms";
+
+function toQryParams(params){
+  return Object.keys(params).map((key) => {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+  }).join('&');
+
+}
+
+
+function getAllotments(params) {
+  const qryParams= toQryParams(params);
+  const resource=`${RES_BASE_NAME}/allotments?${qryParams}`;
+  return api.get(resource).then(res => res.data)
+}
+
+function saveAllotment(params) {
+  const {data,...qrys}=params;
+  const qryParams= toQryParams(qrys);
+  const resource=`${RES_BASE_NAME}/allotments?${qryParams}`;
+  return api.post(resource,params.data).then(res => res.data)
+}
+
 
 function getAllRooms(params) {
   const resource=`${RES_BASE_NAME}/?venue_id=1`;
@@ -35,4 +58,4 @@ function apply(params) {
   return api.post(resource).then(res => res.data)
 }
 
-export  { getAllRooms,getInfo,getList,save,remove,apply};
+export  { getAllotments,saveAllotment,getAllRooms,getInfo,getList,save,remove,apply};

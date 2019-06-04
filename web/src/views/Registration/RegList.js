@@ -99,6 +99,7 @@ class RegList extends Component {
     selected: [],
     eventList: [],
     importList: [],
+    allotmentForRegList:[],
     collapseReg: true,
     showImportModal: false,
     showAllotment:false,
@@ -243,8 +244,13 @@ class RegList extends Component {
   saveAllotment=()=>{
     this.setState({showAllotment:false});
   }
-  handleAllotment=()=>{
-
+  handleAllotment=(e,allotmentRegInfo)=>{
+    if(allotmentRegInfo){
+      this.setState({allotmentForRegList:[allotmentRegInfo]});
+    }else{
+      let regSelectedList=this.state.regDataList.filter(r=>this.state.selected.indexOf(r.id)>=0);
+      this.setState({allotmentForRegList:regSelectedList});
+    }
     this.setState({showAllotment:true});
   }
   handleChange = item => {
@@ -336,7 +342,7 @@ class RegList extends Component {
         text: "Room",
         formatter: (cellContent, row) => {
           const path = "/regs/" + row.id; // + "?event_id=" + row.event_id;
-          return <Button onClick={this.handleAllotment} className="btn btn-primary" size="sm">Allot</Button>;
+          return <Button onClick={(e)=>this.handleAllotment(e,row)} className="btn btn-primary" size="sm">Allot</Button>;
         }
       },
       {
@@ -405,7 +411,8 @@ class RegList extends Component {
       eventList,
       regDataList,
       isVerified,
-      showAllotment
+      showAllotment,
+      allotmentForRegList
     } = this.state;
 
 
@@ -413,7 +420,7 @@ class RegList extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col xl={4} lg={4} className="pull-left">
-          <AllotmentModal modal={showAllotment}  saveAllotment={this.saveAllotment} toggleAllotmentModal={this.toggleAllotmentModal} />
+          <AllotmentModal modal={showAllotment} regIds={allotmentForRegList} saveAllotment={this.saveAllotment} toggleAllotmentModal={this.toggleAllotmentModal} />
             <Select
               styles={customControlStyles}
               value={selectedEvent}
@@ -598,7 +605,7 @@ class RegList extends Component {
                               className="btn btn-success ml-1"
                               color="success"
                               size="sm"
-                              onClick={this.handleDelete}
+                              onClick={this.handleAllotment}
                             >
                               Allotment
                             </Button>

@@ -6,7 +6,7 @@ import { AppSwitch } from "@coreui/react";
 import { apiServices as apiSvc } from "../../api-svc";
 import confirm from "reactstrap-confirm";
 import AllotmentModal from "./AllotmentModal";
-import RegTpl  from "./RegTpl";
+import RegTpl from "./RegTpl";
 import {
   Input,
   Modal,
@@ -99,15 +99,14 @@ class RegList extends Component {
     selected: [],
     eventList: [],
     importList: [],
-    allotmentForRegList:[],
+    allotmentForRegList: [],
     collapseReg: true,
     showImportModal: false,
-    showAllotment:false,
-    isVerified:false
+    showAllotment: false,
+    isVerified: false
   };
 
   handleSwitch = async (e, rowInfo) => {
-
     await this.applyPatch(rowInfo.id, { [e.target.name]: e.target.checked });
   };
 
@@ -135,7 +134,7 @@ class RegList extends Component {
   };
 
   getEvents = async () => {
-    eventSvc.getList({venue_id:1}).then(r => {
+    eventSvc.getList({ venue_id: 1 }).then(r => {
       const events = r.data.items.map(e => {
         return { label: e.title, value: e.id };
       });
@@ -183,7 +182,7 @@ class RegList extends Component {
         category: colInfo[4] ? colInfo[4] : "-",
         gyan_age: colInfo[5] ? colInfo[5] : 0,
         amt_paid: colInfo[6] === "Y",
-        mobile_no: colInfo[7]?colInfo[7]:''
+        mobile_no: colInfo[7] ? colInfo[7] : ""
       };
       return regInfo;
     });
@@ -204,13 +203,13 @@ class RegList extends Component {
 
     const resp = await Promise.all(promises);
     toast.notify("Imported registrations");
-    this.setState({ isVerified:false });
+    this.setState({ isVerified: false });
   };
 
   verifyContent = () => {
     let content = this.state.importText;
     let actualDataList = this.parseData(content);
-    this.setState({ importList: actualDataList,isVerified:true });
+    this.setState({ importList: actualDataList, isVerified: true });
   };
 
   toggleImportModal = () => {
@@ -237,22 +236,24 @@ class RegList extends Component {
     this.setState({ [items[ctr]]: !this.state[items[ctr]] });
   };
 
-  toggleAllotmentModal=()=>{
-    this.setState({showAllotment:false});
-  }
+  toggleAllotmentModal = () => {
+    this.setState({ showAllotment: false });
+  };
 
-  saveAllotment=()=>{
-    this.setState({showAllotment:false});
-  }
-  handleAllotment=(e,allotmentRegInfo)=>{
-    if(allotmentRegInfo){
-      this.setState({allotmentForRegList:[allotmentRegInfo]});
-    }else{
-      let regSelectedList=this.state.regDataList.filter(r=>this.state.selected.indexOf(r.id)>=0);
-      this.setState({allotmentForRegList:regSelectedList});
+  saveAllotment = () => {
+    this.setState({ showAllotment: false });
+  };
+  handleAllotment = (e, allotmentRegInfo) => {
+    if (allotmentRegInfo) {
+      this.setState({ allotmentForRegList: [allotmentRegInfo] });
+    } else {
+      let regSelectedList = this.state.regDataList.filter(
+        r => this.state.selected.indexOf(r.id) >= 0
+      );
+      this.setState({ allotmentForRegList: regSelectedList });
     }
-    this.setState({showAllotment:true});
-  }
+    this.setState({ showAllotment: true });
+  };
   handleChange = item => {
     this.setState({ loading: true });
     this.setState({ selectedEvent: item }, () => {
@@ -262,8 +263,7 @@ class RegList extends Component {
 
   refreshPage = () => {
     this.load();
-
-  }
+  };
 
   load() {
     const event_id = this.state.selectedEvent
@@ -342,7 +342,27 @@ class RegList extends Component {
         text: "Room",
         formatter: (cellContent, row) => {
           const path = "/regs/" + row.id; // + "?event_id=" + row.event_id;
-          return <Button onClick={(e)=>this.handleAllotment(e,row)} className="btn btn-primary" size="sm">Allot</Button>;
+          const AllotBtn = () => {
+            return (
+              <Button
+                onClick={e => this.handleAllotment(e, row)}
+                className="btn btn-primary"
+                size="sm"
+              >
+                Allot
+              </Button>
+            );
+          };
+          const AllotInfo = () => {
+            return (
+              <small>
+                {" "}
+                {row.btitle}-{row.floor_no}-{row.room_title}
+              </small>
+            );
+          };
+          if (row.btitle) return <AllotInfo />;
+          else return <AllotBtn />;
         }
       },
       {
@@ -415,12 +435,16 @@ class RegList extends Component {
       allotmentForRegList
     } = this.state;
 
-
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xl={4} lg={4} className="pull-left">
-          <AllotmentModal modal={showAllotment} regIds={allotmentForRegList} saveAllotment={this.saveAllotment} toggleAllotmentModal={this.toggleAllotmentModal} />
+            <AllotmentModal
+              modal={showAllotment}
+              regIds={allotmentForRegList}
+              saveAllotment={this.saveAllotment}
+              toggleAllotmentModal={this.toggleAllotmentModal}
+            />
             <Select
               styles={customControlStyles}
               value={selectedEvent}
@@ -546,28 +570,31 @@ class RegList extends Component {
                                     </Button>{" "}
                                   </Col>
                                 </FormGroup>
-                                { isVerified &&
-                                <div><FormGroup row>
-                                  <Col xs="12">
-                                    <BootstrapTable
-                                      keyField="id"
-                                      data={importList}
-                                      columns={importCols}
-                                    />
-                                  </Col>
-                                </FormGroup>
-                                <FormGroup row>
-                                  <Col xs="12">
-                                    <Button
-                                      size="sm"
-                                      color="secondary"
-                                      onClick={this.importRegList}
-                                    >
-                                      Import Registrations
-                                    </Button>{" "}
-                                  </Col>
-                                </FormGroup>
-                            </div>}</ModalBody>
+                                {isVerified && (
+                                  <div>
+                                    <FormGroup row>
+                                      <Col xs="12">
+                                        <BootstrapTable
+                                          keyField="id"
+                                          data={importList}
+                                          columns={importCols}
+                                        />
+                                      </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                      <Col xs="12">
+                                        <Button
+                                          size="sm"
+                                          color="secondary"
+                                          onClick={this.importRegList}
+                                        >
+                                          Import Registrations
+                                        </Button>{" "}
+                                      </Col>
+                                    </FormGroup>
+                                  </div>
+                                )}
+                              </ModalBody>
                               <ModalFooter>
                                 <Button
                                   color="secondary"
@@ -609,14 +636,7 @@ class RegList extends Component {
                             >
                               Allotment
                             </Button>
-                            <Button
-                              disabled={this.state.selected.length == 0}
-                              className="btn btn-secondary ml-1"
-                              color="secondary"
-                              size="sm"
-                            >
-                              Cancelled
-                            </Button>
+
                             <Button
                               onClick={this.refreshPage}
                               className="btn btn-secondary ml-1"
@@ -652,7 +672,6 @@ class RegList extends Component {
               </Card>
             </Col>
           </Row>
-
         )}
       </div>
     );

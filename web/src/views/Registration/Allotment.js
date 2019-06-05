@@ -48,8 +48,16 @@ class Allotment extends Component {
     };
   }
 
+  handleRelease=async(allotmentInfo) => {
+   return allotmentSvc.saveAllotment({data:{allotment_id:allotmentInfo.id,room_id:allotmentInfo.room_id,reg_id:this.props.regList[0].id,event_id:this.props.regList[0].event_id,is_active:0},event_id:1,venue_id:1}).then(resp => {
+      this.loadRooms(this.state.selectedBuildingId, this.state.activeFloor);
+    });
+  }
+
   handleAllotment = (roomInfo,is_cot) => {
-    allotmentSvc.saveAllotment({data:{event_id:this.props.regList[0].event_id,is_cot:is_cot,room_id:roomInfo.id,reg_id:this.props.regList[0].id},event_id:1,venue_id:1}).then(resp => {});
+    allotmentSvc.saveAllotment({data:{event_id:this.props.regList[0].event_id,is_cot:is_cot,room_id:roomInfo.id,reg_id:this.props.regList[0].id},event_id:1,venue_id:1}).then(resp => {
+      this.loadRooms(this.state.selectedBuildingId, this.state.activeFloor);
+    });
   };
 
   handleSelectBuilding = selBuilding => {
@@ -78,7 +86,6 @@ class Allotment extends Component {
   };
 
   loadAllotments = (buildingId, floor_no) => {
-    debugger;
     const params = {
       event_id: 1,
       venue_id: 1,
@@ -98,10 +105,11 @@ class Allotment extends Component {
     const allotments = await this.loadAllotments(buildingId, floor_no);
 
     const finalRooms = rooms.map(r => {
-      r.allotments = allotments;
+       r.allotments = allotments.filter(ra=>ra.room_id==r.id);
+       return r;
     });
 
-    this.setState({ rooms: rooms });
+    this.setState({ rooms: finalRooms });
   };
 
   componentDidMount = async () => {
@@ -130,16 +138,22 @@ class Allotment extends Component {
 
   render() {
     const { floors, activeFloor, rooms, buildingList } = this.state;
+    const CurrentAllotments=()=>{
+      const { regList } = this.props;
+        return regList.map(item =>{
+            return <span>{item.fullname} :{item.room_info}  </span>;
+        })
+    }
     const addButtonCaption =
       this.props.regList.length <= 1 ? "Allot here" : "Allot all here";
 
     return (
-      <div className="animated fadeIn">
+      <div className="animated fadeIn ">
         <Row>
           <Col xl={12} lg={12}>
             <FormGroup>
               <Label check className="form-check-label">
-                Allotment for :
+                Allotment for :   <CurrentAllotments hidden regList={this.props.regList} />
               </Label>
               <Select
                 name="registrants"
@@ -287,12 +301,12 @@ class Allotment extends Component {
 
                           </td>
                           <td>
-                            <table className="table table-sm">
+                            <table className="table table-sm allotment">
                               <thead>
                                 <tr>
                                   <th>S.No</th>
                                   <th>Name</th>
-                                  <th>Occupied </th>
+                                  <th>Arrived </th>
                                   <th>Departing</th>
                                 </tr>
                               </thead>
@@ -304,7 +318,7 @@ class Allotment extends Component {
                                       <tr>
                                           <td>{idx+1}</td>
                                           <td>{rallot.fullname}</td>
-                                          <td>{rallot.is_active?"Y":"-"} <Button size="sm" color="danger">Release</Button></td>
+                                          <td>{rallot.is_arrived?"Y":"N"} <Button onClick={()=>this.handleRelease(rallot)} size="sm" color="danger">Release</Button></td>
                                           <td>{rallot.leaving_date}</td>
                                           <td>{rallot.reg_remarks}</td>
                                       </tr>

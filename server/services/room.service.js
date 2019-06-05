@@ -26,10 +26,11 @@ async function addAllotment(params) {
   });
 }
 
-async function updateAllotment(id, regInfo) {
+async function updateAllotment(id, allotInfo) {
+    console.log("updating");
   return new Promise(async (resolve, reject) => {
     roomModel
-      .updateAllotment(id, regInfo)
+      .updateAllotment(id, {is_active:0})
       .then(data => {
         resolve(data);
       })
@@ -40,15 +41,15 @@ async function updateAllotment(id, regInfo) {
 }
 
 function saveAllotment(params) {
-  const allotmentId=params.allotment_id;
+  const allotmentId=params.data.allotment_id;
   const allotmentInfo=params;
 
-  return new Promise((resolve, reject) => {
-    if (allotmentId) {
-        return Promise.resolve(1);
-     // return updateAllotment(allotmentId, allotmentInfo);
+  return new Promise(async (resolve, reject) => {
+    if (allotmentId>0) {
+         await updateAllotment(allotmentId, params.data);
+         resolve({});
     } else {
-        let insertedInfo=addAllotment(params);
+        let insertedInfo=await addAllotment(params);
         resolve(insertedInfo);
     }
   });

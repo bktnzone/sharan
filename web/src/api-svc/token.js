@@ -33,7 +33,6 @@ export function getValidToken() {
 }
 
 export function getDecodedToken() {
-  debugger;
   const validToken = getValidToken()
   if (validToken) {
     return decodeJWT(validToken)

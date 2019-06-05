@@ -13,10 +13,14 @@ var regModel = {
 
 async function getList (params) {
     const sql= msql()
-    .select( "r.*,e.title,e.description", 'bm_registrations r' )
+    .select( "r.*,b.title as btitle,rm.floor_no,rm.room_title,e.title,e.description", 'bm_registrations r' )
     .ljoin( "bm_events e", "e.id = r.event_id" )
+    .ljoin( "bm_room_allotments ra", "ra.reg_id = r.id and ra.event_id=r.event_id" )
+    .ljoin( "bm_rooms_master rm", "rm.id = ra.room_id and ra.is_active=1" )
+    .ljoin( "bm_buildings b", "rm.building_id = b.id" )
     .where({'r.event_id':params.event_id,'r.is_active':1})
     .sql();
+    console.log(format(sql));
     return  db.query(format(sql));
 }
 

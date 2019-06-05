@@ -8,6 +8,8 @@ module.exports = {
       //,venue_id:req.query.venue_id
       let body=req.body;
       let params={venue_id:1,event_id:req.query.event_id,data:{room_id:body.room_id,reg_id:body.reg_id,is_cot:body.is_cot}};
+      if(body.allotment_id) params.data.allotment_id=body.allotment_id;
+
       const result = await roomSvc.saveAllotment(params);
       req.data = { items: result };
     } catch (err) {

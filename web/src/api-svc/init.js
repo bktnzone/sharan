@@ -12,8 +12,6 @@ const api = axios.create({
 
 export function setToken(token) {
   // saves token to local storage
-
-  debugger;
   rememberToken(token)
   if (token) {
     // Setting the Authorisation header for all future GET requests

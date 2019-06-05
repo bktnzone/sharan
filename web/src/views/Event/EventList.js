@@ -4,6 +4,7 @@ import Select from "react-select";
 import {apiServices as apiSvc} from "../../api-svc";
 import Util  from "../Shared/Util"
 import confirm from 'reactstrap-confirm';
+import Moment from 'react-moment';
 import {
   Button,
   CardBody,
@@ -36,6 +37,12 @@ const columns = [
     }
   },
   {
+    dataField: "event_group",
+    text: "Category",
+    searchable: true,
+    sort: true
+  },
+  {
     dataField: "title",
     text: "Name",
     searchable: true,
@@ -51,13 +58,23 @@ const columns = [
     dataField: "start_date",
     text: "Start Date",
     searchable: false,
-    sort: true
+    sort: true,
+    formatter:(cellContent,row)=>{
+      return  <Moment format="DD-MM-YYYY">
+              {cellContent}
+              </Moment>
+    }
   },
   {
     dataField: "end_date",
     text: "End Date",
     searchable: false,
-    sort: true
+    sort: true,
+    formatter:(cellContent,row)=>{
+      return  <Moment format="DD-MM-YYYY">
+              {cellContent}
+              </Moment>
+    }
   }
 
 
@@ -112,7 +129,7 @@ class EventList extends Component {
 
   getVenues=async ()=>{
 
-    venueSvc.getList().then(r=>{
+  return  venueSvc.getList().then(r=>{
       const venues=r.data.items.map(e=> {return {"label":e.title,"value":e.id};});
       this.setState({venueList:venues});
     });
@@ -220,18 +237,7 @@ styles={ customControlStyles}
                 >
                   {props => (
                     <div>
-                      <div className="pull-left ml-0">
 
-                          <Link to={"/regs/0?event_id=" + selectedVenue.value}>
-                            <Button renderas="button" color="primary" size="sm">
-                              <span>Add New</span>
-                            </Button>
-                          </Link>
-                          <Button disabled={this.state.selected.length==0} className="btn btn-success ml-1" color="danger" size="sm" onClick={ this.handleDelete }>Delete</Button>
-
-
-
-                      </div>
 
                       <div className="pull-right">
                         <SearchBar {...props.searchProps} />

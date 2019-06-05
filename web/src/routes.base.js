@@ -23,7 +23,7 @@ const ButtonDropdowns = React.lazy(() => import('./pages/Buttons/ButtonDropdowns
 const ButtonGroups = React.lazy(() => import('./pages/Buttons/ButtonGroups'));
 const Buttons = React.lazy(() => import('./pages/Buttons/Buttons'));
 const Charts = React.lazy(() => import('./pages/Charts'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Dashboard = React.lazy(() => import('./views/Dashboard'));
 const CoreUIIcons = React.lazy(() => import('./pages/Icons/CoreUIIcons'));
 const Flags = React.lazy(() => import('./pages/Icons/Flags'));
 const FontAwesome = React.lazy(() => import('./pages/Icons/FontAwesome'));

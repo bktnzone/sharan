@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
+import moment from 'moment';
 import {
   Form,
   FormGroup,
@@ -118,7 +119,7 @@ class RegEdit extends Component {
     event.preventDefault();
     const formData = new FormData(event.target);
     for (var key of formData.keys()) {
-      if (key != "amt_paid" && key != "is_departed" && key != "is_arrived")
+      if (key != "is_volunteer" && key != "amt_paid"  && key != "is_departed" && key != "is_arrived")
         regData[key] = formData.get(key);
     }
 
@@ -397,9 +398,9 @@ class RegEdit extends Component {
                     <Col xs="6">
                       <Label htmlFor="reg_name">Arrival Date</Label>{" "}
                       <Input
-                        defaultValue={regData.arrival_date}
-                        value={regData.arrival_date || ""}
-                        type="text"
+                       defaultValue={ moment(regData.arrival_date).format('YYYY-MM-DD')}
+                       value={moment(regData.arrival_date).format('YYYY-MM-DD') || ""}
+                        type="date"
                         id="arrival_date"
                         name="arrival_date"
                         placeholder="enter arrival date"
@@ -412,9 +413,9 @@ class RegEdit extends Component {
                     <Col xs="6">
                       <Label htmlFor="reg_name">Departing Date</Label>{" "}
                       <Input
-                        defaultValue={regData.leaving_date}
-                        value={regData.leaving_date || ""}
-                        type="text"
+                        defaultValue={ moment(regData.leaving_date).format('YYYY-MM-DD')}
+                        value={moment(regData.leaving_date).format('YYYY-MM-DD') || ""}
+                        type="date"
                         id="leaving_date"
                         name="leaving_date"
                         placeholder="enter departing date"

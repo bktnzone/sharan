@@ -255,19 +255,14 @@ class Allotment extends Component {
                         <tr>
                           <td
                             width="30% "
-                            className={
-                              "text-center " +
-                              (r.is_reserved === 1
-                                ? "bg-danger"
-                                : "bg-secondary")
-                            }
+                            className= "text-center bg-secondary"
                             style={{ verticalAlign: "top" }}
                           >
                             <h3> Room : {r.room_title}</h3>
                            { r.cot_count>0 &&  <p>
 
 
-                              {r.is_reserved != 1 && (
+                              { (
                               <Button
                                 size="sm"
                                 color="success"
@@ -280,7 +275,7 @@ class Allotment extends Component {
                            }
                               { r.dorm_count>0 &&  <p>
 
-                               {r.is_reserved != 1 && (
+                               {  (
                               <Button
                               size="sm"
                               color="success"
@@ -294,9 +289,14 @@ class Allotment extends Component {
                            }
 
 
-                            <hr />
 
-                            {r.is_reserved === 1 && <p>{r.reserved_remarks}</p>}
+
+                            {r.is_reserved === 1 &&  <><hr /><div className={
+                              "text-center " +
+                              (r.is_reserved === 1
+                                ? "bg-danger"
+                                : "bg-secondary")
+                            }>{r.reserved_remarks}</div></>}
 
 
                           </td>
@@ -306,6 +306,7 @@ class Allotment extends Component {
                                 <tr>
                                   <th>S.No</th>
                                   <th>Name</th>
+                                  <th>Cot ?</th>
                                   <th>Arrived </th>
                                   <th>Departing</th>
                                 </tr>
@@ -318,6 +319,7 @@ class Allotment extends Component {
                                       <tr>
                                           <td>{idx+1}</td>
                                           <td>{rallot.fullname}</td>
+                                          <td>{rallot.is_cot==1?"Y":"N"}</td>
                                           <td>{rallot.is_arrived?"Y":"N"} <Button onClick={()=>this.handleRelease(rallot)} size="sm" color="danger">Release</Button></td>
                                           <td>{rallot.leaving_date}</td>
                                           <td>{rallot.reg_remarks}</td>

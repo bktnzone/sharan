@@ -15,7 +15,8 @@ module.exports = {
   add: async (req, res, next) => {
     try {
       const regInfo = req.body;
-      console.log(req.body);
+      if(req.user)
+        regInfo.updatedBy=req.user.emailId;
       const result = await regSVC.add(regInfo);
       let actualData = await regSVC.getById({ reg_id:result.insertId});
       req.data = {...actualData};
@@ -30,6 +31,9 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { createdAt,updatedAt, description,title,  ...regInfo} = req.body;
+      if(req.user)
+        regInfo.updatedBy=req.user.emailId;
+
       const result = await regSVC.update(req.params.id,regInfo);
       let actualData = await regSVC.getById({ reg_id:req.params.id});
       req.data = {...actualData};

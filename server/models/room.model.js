@@ -37,7 +37,7 @@ function addAllotment(allotmentInfo) {
 
 function getAllotments(params) {
     const sql= msql()
-    .select( "a.*,rm.room_no,rm.floor_no, rm.building_id,r.fullname,r.leaving_date,r.is_sevadhari", 'bm_room_allotments a' )
+    .select( "a.*,rm.room_no,rm.floor_no, rm.building_id,r.fullname,r.leaving_date,r.is_volunteer", 'bm_room_allotments a' )
     .ljoin("bm_registrations r","r.id=a.reg_id")
     .ljoin("bm_rooms_master rm","rm.id=a.room_id")
     .where({'a.is_active':1,'rm.building_id':params.building_id,'rm.floor_no':params.floor_no})

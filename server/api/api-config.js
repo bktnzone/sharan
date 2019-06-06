@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //if(process.env.NODE_ENV!="development")
-  app.use('/api',jwt());
+  //app.use('/api',jwt());
 app.use('/api',apiRoutes);
 
 //app.use('/api',apiRoutes);

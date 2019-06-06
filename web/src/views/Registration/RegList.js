@@ -17,8 +17,10 @@ import {
   Collapse,
   CardBody,
   CardHeader,
+  Label,
   Col,
   Card,
+  ButtonGroup,
   Row,
   FormGroup
 } from "reactstrap";
@@ -103,11 +105,39 @@ class RegList extends Component {
     collapseReg: true,
     showImportModal: false,
     showAllotment: false,
-    isVerified: false
+    isVerified: false,
+    metricsList:[],
   };
 
+  computeMetrics=(regDataList)=>{
+    let metrics=[];
+    metrics.push({name:'Registered',value:regDataList.length})  ;
+    metrics.push({name:'Sevadhari',value:regDataList.filter(p=> p.is_volunteer==1).length});
+    metrics.push({name:'Participant',value:regDataList.filter(p=> p.is_volunteer!=1).length});
+    metrics.push({name:'Arrived',value:regDataList.filter(p=> p.is_arrived==1).length});
+    metrics.push({name:'Total Paid',value:regDataList.filter(p=>p.amt_paid==1 ).length}) ;
+    metrics.push({name:'Arrived Not Paid',value:regDataList.filter(p=>p.amt_paid!=1 && p.is_arrived==1).length}) ;
+    metrics.push({name:'Paid Not Arrived',value:regDataList.filter(p=>p.amt_paid==1 && p.is_arrived!=1).length})  ;
+    metrics.push({name:'Paid Here',value:regDataList.filter(p=>p.amt_paid==1 && p.paid_location!="center").length})  ;
+    metrics.push({name:'Paid Centre',value:regDataList.filter(p=>p.amt_paid==1 && p.paid_location=="center").length})  ;
+    this.setState({metricsList:metrics});
+  }
+
   handleSwitch = async (e, rowInfo) => {
-    await this.applyPatch(rowInfo.id, { [e.target.name]: e.target.checked });
+    debugger;
+    let targetName=e.target.name;
+    let targetState=e.target.checked;
+
+
+    if(targetName=="paid_location"){
+
+      if(e.target.checked)
+        targetState="center"
+       else
+         targetState="direct"
+    }
+    await this.applyPatch(rowInfo.id, { [targetName]: targetState });
+
   };
 
   constructor(props) {
@@ -115,6 +145,7 @@ class RegList extends Component {
   }
 
   applyPatch = async (itemId, patchParams) => {
+
     return regSvc.patch({ id: itemId, ...patchParams }).then(p => {
       if (!(patchParams.is_active === 0)) toast.notify("updated registration");
     });
@@ -278,6 +309,7 @@ class RegList extends Component {
       .getList({ event_id: event_id })
       .then(regs => {
         this.setState({ regDataList: regs.data.items });
+        this.computeMetrics( regs.data.items);
 
         // toggle loading page off
         this.setState({ loading: false });
@@ -367,7 +399,7 @@ class RegList extends Component {
       },
       {
         dataField: "arrived",
-        text: "Arrived",
+        text: "Arrived?",
         searchable: true,
         sort: true,
         formatter: (cellContent, row) => {
@@ -390,15 +422,15 @@ class RegList extends Component {
           );
         }
       },
-
       {
         dataField: "amt_paid",
-        text: "Paid?",
+        text: "Paid ? ",
         searchable: true,
         sort: true,
         formatter: (cellContent, row) => {
           return (
             <React.Fragment>
+
               <AppSwitch
                 onChange={e => this.handleSwitch(e, row)}
                 checked={row.amt_paid == 1}
@@ -412,10 +444,37 @@ class RegList extends Component {
                 dataOn={"\u2713"}
                 dataOff={"\u2715"}
               />
+
+
             </React.Fragment>
           );
         }
-      }
+      },
+      {
+        dataField: "paid_location",
+        text: "Centre ?",
+        searchable: true,
+        sort: true,
+        formatter: (cellContent, row) => {
+          return (
+            <React.Fragment>
+                <AppSwitch
+                onChange={e => this.handleSwitch(e, row)}
+                checked={row.paid_location == "center"}
+                size="sm"
+                name="paid_location"
+                className={"mx-1"}
+
+                color={"danger"}
+                outline={"alt"}
+                label
+                dataOn={"\u2713"}
+                dataOff={"\u2715"}
+              />
+            </React.Fragment>
+          );
+        }
+      },
     ];
     const selectRow = {
       mode: "checkbox", // multiple row selection
@@ -429,6 +488,7 @@ class RegList extends Component {
       showImportModal,
       selectedEvent,
       eventList,
+      metricsList,
       regDataList,
       isVerified,
       showAllotment,
@@ -448,7 +508,6 @@ class RegList extends Component {
             <Select
               styles={customControlStyles}
               value={selectedEvent}
-              isClearable
               isSearchable
               onChange={this.handleChange}
               options={eventList}
@@ -456,6 +515,18 @@ class RegList extends Component {
               isSearchable={true}
             />
           </Col>
+
+        </Row>
+        <Row>
+
+          {
+                          metricsList.map(mt=>{
+                            return (
+                              <Col xs="3">{mt.name} : {mt.value} </Col>
+                            )
+                          })
+                        }
+
         </Row>
 
         {selectedEvent && (
@@ -486,6 +557,7 @@ class RegList extends Component {
                 </CardHeader>
                 <Collapse isOpen={this.state.collapseReg} id="collapseReg">
                   <CardBody>
+
                     <ToolkitProvider
                       bootstrap4={true}
                       keyField="id"
@@ -649,7 +721,7 @@ class RegList extends Component {
 
                           <div className="pull-right">
                             <SearchBar {...props.searchProps} />
-                            <ClearSearchButton {...props.searchProps} />
+
                           </div>
                           <div />
                           <BootstrapTable
@@ -661,7 +733,7 @@ class RegList extends Component {
                             hover
                             bordered={false}
                             sortable
-                            pagination={paginationFactory()}
+                            pagination={paginationFactory({sizePerPage:50})}
                             {...props.baseProps}
                           />
                         </div>

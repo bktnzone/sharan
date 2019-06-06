@@ -3,7 +3,7 @@ const dbConn = require('../config/db-function');
 const msql=dbConn.msql;
 const format=dbConn.formatSQL;
 
-var regModel = {
+var eventModel = {
     getList:getList,
     add:add,
     update:update,
@@ -16,6 +16,7 @@ async function getList (params) {
     .select( "E.*", 'bm_events E' )
     .ljoin( "bm_venues V", "V.id = E.venue_id" )
     .where({'E.venue_id':params.venue_id})
+    .order( "E.is_current" )
     .sql();
     return  db.query(format(sql));
 }
@@ -61,5 +62,5 @@ async  function remove(id) {
 }
 
 
-module.exports = regModel;
+module.exports = eventModel;
 

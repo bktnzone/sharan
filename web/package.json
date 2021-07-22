@@ -47,7 +47,7 @@
     "reactstrap-confirm": "^1.0.4",
     "simple-line-icons": "^2.4.1",
     "toasted-notes": "^2.1.5",
-    "xlsx": "^0.14.3"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.3",

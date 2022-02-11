@@ -11,7 +11,7 @@
     "debug": "nodemon -r dotenv/config --inspect=9229 app.js"
   },
   "dependencies": {
-    "ajv": "^5.5.2",
+    "ajv": "^6.12.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "*",
     "cors": "*",

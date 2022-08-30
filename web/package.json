@@ -24,7 +24,7 @@
     "lodash.defaults": "^4.2.0",
     "lodash.uniqby": "^4.7.0",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.5.0",
